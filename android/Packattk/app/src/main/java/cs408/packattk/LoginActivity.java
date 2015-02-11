@@ -166,7 +166,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         char afterAt=email.charAt(email.indexOf("@")+1);
 
         //check for valid character before and after @
-        if(!(string.isAlphaNumeric(beforeAt) && string.isAlphaNumeric(afterAt)))
+        if(!(character.isAlphaNumeric(beforeAt) && character.isAlphaNumeric(afterAt)))
             return false;
 
         return true;
@@ -180,7 +180,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         //check for spaces in password
         for(int i=0;i<password.length();i++){
-            if(string.isSpace(password.charAt(i)))
+            if(character.isSpace(password.charAt(i)))
                 return false;
         }
 

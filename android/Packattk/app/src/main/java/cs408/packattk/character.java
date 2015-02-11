@@ -3,7 +3,7 @@ package cs408.packattk;
 /**
  * Created by Matthew on 2/10/2015.
  */
-public class string {
+public class character {
     /**
      * Check if a character is alphaNumeric
      */
@@ -16,5 +16,14 @@ public class string {
      */
     public static boolean isSpace(char c){
         return (c==' ' || c=='\t' || c=='\n' || c=='\r');
+    }
+
+    /**
+     * Check if character is a lower case character
+     */
+    public static boolean isLowerCase(char c){
+        if(c >= 'a' && c <= 'z')
+                return true;
+        return false;
     }
 }
