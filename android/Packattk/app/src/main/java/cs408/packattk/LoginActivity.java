@@ -159,7 +159,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             return false;
 
         //check if @ is last character
-        if(email.indexOf("c") != email.length()-1)
+        if(email.indexOf("@") != email.length()-1)
             return false;
 
         //get characters before and after ampersand
@@ -180,11 +180,24 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private boolean isAlphaNumeric(char c){
         return ((c >='0' && c<='9') || (c>='A' && c<='Z') || (c>='a' && c<='z'));
     }
+    private boolean isSpace(char c){
+        return (c==' ' || c=='\t' || c=='\n' || c=='\r');
+    }
 
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //Check for valid length
+        if(password.length() < 5 || password.length() > 20)
+                return false;
+
+        //check for spaces in password
+        for(int i=0;i<password.length();i++){
+            if(isSpace(password.charAt(i)))
+                return false;
+        }
+
+
+        return true;
     }
 
     /**
