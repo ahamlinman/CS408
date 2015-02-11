@@ -145,12 +145,45 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     private boolean isEmailValid(String email) {
-        //TOO: Replace this with your own logic
-        return email.contains("@");
+
+        //Check for valid length
+        if(email.length() < 8)
+                return false;
+
+        //Check if email has proper suffix
+        if(!(email.endsWith(".edu") || email.endsWith(".com") || email.endsWith(".org") || email.endsWith(".net")))
+            return false;
+
+        //check if email has @ and does not start with @
+        if(!(email.contains("@")) || email.charAt(0)=='@')
+            return false;
+
+        //check if @ is last character
+        if(email.indexOf("c") != email.length()-1)
+            return false;
+
+        //get characters before and after ampersand
+        char beforeAt=email.charAt(email.indexOf("@")-1);
+        char afterAt=email.charAt(email.indexOf("@")+1);
+
+        //check for valid character before and after @
+        if(!(isAlphaNumeric(beforeAt) && isAlphaNumeric(afterAt)))
+            return false;
+
+        return true;
     }
 
+
+    /**
+     * Check if a character is alphaNumeric
+     */
+    private boolean isAlphaNumeric(char c){
+        return ((c >='0' && c<='9') || (c>='A' && c<='Z') || (c>='a' && c<='z'));
+    }
+
+
     private boolean isPasswordValid(String password) {
-        //TOO: Replace this with your own logic
+        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
