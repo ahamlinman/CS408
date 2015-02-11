@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -167,21 +166,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         char afterAt=email.charAt(email.indexOf("@")+1);
 
         //check for valid character before and after @
-        if(!(isAlphaNumeric(beforeAt) && isAlphaNumeric(afterAt)))
+        if(!(string.isAlphaNumeric(beforeAt) && string.isAlphaNumeric(afterAt)))
             return false;
 
         return true;
-    }
-
-
-    /**
-     * Check if a character is alphaNumeric
-     */
-    private boolean isAlphaNumeric(char c){
-        return ((c >='0' && c<='9') || (c>='A' && c<='Z') || (c>='a' && c<='z'));
-    }
-    private boolean isSpace(char c){
-        return (c==' ' || c=='\t' || c=='\n' || c=='\r');
     }
 
 
@@ -192,7 +180,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         //check for spaces in password
         for(int i=0;i<password.length();i++){
-            if(isSpace(password.charAt(i)))
+            if(string.isSpace(password.charAt(i)))
                 return false;
         }
 
