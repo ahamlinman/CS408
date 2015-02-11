@@ -2,9 +2,10 @@
 <resources>
 
     <string name="app_name">Packattk</string>
-    <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_activity_admin">Administrator Home</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_student">StudentActivity</string>
+    <string name="my_packages">My Packages</string>
+    <string name="title_activity_student">Packages</string>
 
 </resources>
