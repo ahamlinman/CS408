@@ -22,8 +22,6 @@ public class character {
      * Check if character is a lower case character
      */
     public static boolean isLowerCase(char c){
-        if(c >= 'a' && c <= 'z')
-                return true;
-        return false;
+       return (c >= 'a' && c <= 'z');
     }
 }
