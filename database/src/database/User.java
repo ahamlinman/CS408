@@ -47,9 +47,9 @@ public class User {
 	* Return true when the user account is created, otherwise return false
 	*/
 	  public boolean emailUser(String emailAddr){
-		  final String username = "jixiaojing1231@gmail.com";
+		    final String username = "jixiaojing1231@gmail.com";
 			final String password = "Jj911225";
-	 
+			boolean sent = false;
 			Properties props = new Properties();
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.starttls.enable", "true");
@@ -73,13 +73,12 @@ public class User {
 					+ "\n\nThank you for joining Packattk :)!");
 	 
 				Transport.send(message);
-	 
-				System.out.println("Done");
+				sent = true;
 	 
 			} catch (MessagingException e) {
 				throw new RuntimeException(e);
 			}
-		  return false;
+		  return sent;
 	  }
 	  
 	  public static void main( String args[] )
