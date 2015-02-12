@@ -2,6 +2,7 @@ package tk.packattk;
 
 import javax.servlet.annotation.WebServlet;
 
+import tk.packattk.components.AccountCreateWindow;
 import tk.packattk.components.LoginWindow;
 
 import com.vaadin.annotations.Theme;
@@ -26,8 +27,8 @@ import com.vaadin.ui.VerticalLayout;
  */
 @Theme("mytheme")
 @Widgetset("tk.packattk.MyAppWidgetset")
-@Title("Packattk: Log In")
-public class LoginUI extends UI {
+@Title("Packattk: Create Account")
+public class AccountCreateUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
@@ -43,40 +44,39 @@ public class LoginUI extends UI {
 		MenuItem mainItem = mainMenu.addItem("Packattk", null);
 		mainItem.addItem("About", null);
 
-		mainMenu.addItem("Create Account", new Command() {
+		mainMenu.addItem("Log In", new Command() {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				getPage().setLocation("/account/create");
+				getPage().setLocation("/");
 			}
 		});
 
 		mainMenu.setWidth("100%");
 
-		final LoginWindow login = new LoginWindow();
-		login.setWidth("50%");
-		login.setHeight("300px");
+		final AccountCreateWindow create = new AccountCreateWindow();
+		create.setWidth("50%");
+		create.setHeight("300px");
 
 		layout.addComponent(mainMenu);
-		layout.addComponent(login);
+		layout.addComponent(create);
 
 		layout.setSpacing(true);
-		layout.setComponentAlignment(login, Alignment.MIDDLE_CENTER);
+		layout.setComponentAlignment(create, Alignment.MIDDLE_CENTER);
 
-		login.addLoginListener(new ClickListener() {
+		create.addCreateListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				String username = login.getUsername();
-				String password = login.getPassword();
-
-				Notification.show(username + ":" + password);
+				String email = create.getEmail();
+				String password = create.getPassword();
+				boolean passwordsEqual = create.passwordsEqual();
 			}
 		});
 
 		return layout;
 	}
 
-	@WebServlet(urlPatterns = "/*", name = "LoginUIServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = LoginUI.class, productionMode = false)
-	public static class LoginUIServlet extends VaadinServlet {
+	@WebServlet(urlPatterns = "/account/create/*", name = "AccountCreateUIServlet", asyncSupported = true)
+	@VaadinServletConfiguration(ui = AccountCreateUI.class, productionMode = false)
+	public static class AccountCreateUIServlet extends VaadinServlet {
 	}
 }
