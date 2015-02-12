@@ -1,6 +1,11 @@
 package database;
 import java.sql.*;
+
 import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import java.util.Properties;
 
 public class User {
 	
@@ -42,7 +47,38 @@ public class User {
 	* Return true when the user account is created, otherwise return false
 	*/
 	  public boolean emailUser(String emailAddr){
-
+		  final String username = "jixiaojing1231@gmail.com";
+			final String password = "Jj911225";
+	 
+			Properties props = new Properties();
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.port", "587");
+	 
+			Session session = Session.getInstance(props,
+			  new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+			  });
+	 
+			try {
+	 
+				Message message = new MimeMessage(session);
+				message.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse(emailAddr));
+				message.setSubject("Testing Subject");
+				message.setText("Hello,"
+					+ "\n\nThank you for joining Packattk :)!");
+	 
+				Transport.send(message);
+	 
+				System.out.println("Done");
+	 
+			} catch (MessagingException e) {
+				throw new RuntimeException(e);
+			}
 		  return false;
 	  }
 	  
