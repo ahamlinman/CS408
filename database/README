@@ -1,0 +1,4 @@
+Compile Code:
+
+endeavor01@tracy-central:~/CS408/database$ javac -cp .:mail.jar -cp .:sqlite-jdbc-3.8.7.jar User.java
+endeavor01@tracy-central:~/CS408/database$ java -cp .:mail.jar -cp .:sqlite-jdbc-3.8.7.jar User
