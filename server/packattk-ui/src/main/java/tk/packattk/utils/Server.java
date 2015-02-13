@@ -43,30 +43,33 @@ public class Server {
     }
 
     public void executeRequest(String buffer) {
-        if (buffer.substring(0, 5).equals("LOGIN"))
-            checkLogin(buffer);
+        if (buffer.substring(0, 5).equals("LOGIN")) {
+            try {
+				if(checkLogin(buffer)) {
+					bw.write("SUCCESS");
+				} else {
+					bw.write("FAILURE");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
     }
 
-    public int checkLogin(String msg) {
+    /**
+     * Check a LOGIN message and verify the username/password
+     * @param msg The LOGIN message to check
+     * @return Whether the login was correct (true) or not (false)
+     * @author Cris, Alex
+     */
+    public boolean checkLogin(String msg) {
         String credentials = msg.substring(msg.indexOf(" ") + 1);
         String username = credentials.substring(0, credentials.indexOf(" "));
         String password = credentials.substring(credentials.indexOf(" ") + 1);
 
         // do some database stuff to verify username + password combo
 
-        try {
-            bw.write("SUCCESS");
-        }
-        catch (IOException e) {
-            System.out.println("IO Exception: " + e.toString());
-            e.printStackTrace();
-            return 1;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return 1;
-        }
-
-        return 0;
+        // For now, simply verify that the credentials are correct in every case
+        return true;
     }
 }
