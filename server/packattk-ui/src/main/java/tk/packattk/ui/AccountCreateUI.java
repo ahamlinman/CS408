@@ -9,6 +9,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.AbstractLayout;
@@ -68,7 +69,18 @@ public class AccountCreateUI extends UI {
 			public void buttonClick(ClickEvent event) {
 				String email = create.getEmail();
 				String password = create.getPassword();
-				boolean passwordsEqual = create.passwordsEqual();
+
+				try {
+					create.getEmailField().validate();
+					create.getPasswordField().validate();
+					create.getPasswordConfirmField().validate();
+					create.validatePasswordsEqual();
+				} catch (InvalidValueException e) {
+					Notification.show(e.getMessage().length() == 0 ? "An error occurred" : e.getMessage());
+					return;
+				}
+
+				Notification.show("Account creation");
 			}
 		});
 

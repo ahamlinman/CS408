@@ -45,7 +45,7 @@ public class Server {
     public void executeRequest(String buffer) {
         if (buffer.substring(0, 5).equals("LOGIN")) {
             try {
-				if(checkLogin(buffer)) {
+				if(checkLoginMessage(buffer)) {
 					bw.write("SUCCESS");
 				} else {
 					bw.write("FAILURE");
@@ -62,14 +62,24 @@ public class Server {
      * @return Whether the login was correct (true) or not (false)
      * @author Cris, Alex
      */
-    public boolean checkLogin(String msg) {
+    public boolean checkLoginMessage(String msg) {
         String credentials = msg.substring(msg.indexOf(" ") + 1);
         String username = credentials.substring(0, credentials.indexOf(" "));
         String password = credentials.substring(credentials.indexOf(" ") + 1);
 
-        // do some database stuff to verify username + password combo
-
-        // For now, simply verify that the credentials are correct in every case
-        return true;
+        return checkLogin(username, password);
+    }
+    
+    /**
+     * Check login credentials
+     * @param username The username
+     * @param password The password
+     * @return Boolean true/false whether the credentials are valid
+     */
+    public boolean checkLogin(String username, String password) {
+    	// do some database stuff to verify username + password combo
+        
+        // For now, just use a hardcoded username/password
+        return username.equals("user") && password.equals("password");
     }
 }

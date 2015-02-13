@@ -1,23 +1,25 @@
-package tk.packattk.ui;
+package tk.packattk;
 
 import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.LoginWindow;
+import tk.packattk.utils.Server;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -67,8 +69,23 @@ public class LoginUI extends UI {
 			public void buttonClick(ClickEvent event) {
 				String username = login.getUsername();
 				String password = login.getPassword();
-
-				Notification.show(username + ":" + password);
+				
+				try {
+					login.getUsernameField().validate();
+					login.getPasswordField().validate();
+				} catch (InvalidValueException e) {
+					Notification.show(e.getMessage().length() == 0 ? "There was an error" : e.getMessage());
+					login.getUsernameField().setValidationVisible(true);
+					login.getPasswordField().setValidationVisible(true);
+					return;
+				}
+				
+				Server server = new Server();
+				if(server.checkLogin(username, password)) {
+					Notification.show("Success!");
+				} else {
+					Notification.show("Incorrect username/password. Please try again.");
+				}
 			}
 		});
 
