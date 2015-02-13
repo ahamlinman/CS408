@@ -1,4 +1,4 @@
-package tk.packattk;
+package tk.packattk.ui;
 
 import javax.servlet.annotation.WebServlet;
 
