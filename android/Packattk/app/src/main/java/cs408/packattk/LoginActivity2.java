@@ -5,13 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -25,7 +25,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,15 @@ import java.util.List;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+public class LoginActivity2 extends Activity implements LoaderCallbacks<Cursor> {
+
+    /**
+     * A dummy authentication store containing known user names and passwords.
+     * TOO: remove after connecting to a real authentication system.
+     */
+    private static final String[] DUMMY_CREDENTIALS = new String[]{
+            "foo@example.com:hello", "bar@example.com:world"
+    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -45,11 +52,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private Context context=this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login2);
+        setContentView(R.layout.activity_login);
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -68,75 +75,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        Button mEmailRegisterButton= (Button) findViewById(R.id.email_register_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptRegister();
-            }
-        });
-        /*Button bypassButton = (Button) findViewById(R.id.bypass);
-        bypassButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) { bypass();}
-        });*/
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    public void bypass(){
-        Intent intent= new Intent(LoginActivity.this,StudentActivity.class);
-        startActivity(intent);
-    }
-    public void attemptRegister(){
-        if(mAuthTask!=null)
-                return;
-        //Reset errors
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-        String email= mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-
-        View focusView=null;
-
-        if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
-            int newUserValid=1;
-            /*Client client = new Client(email);
-            newUserValid= client.addUser(email,password);
-            //newUserValid = Client.addUser(email,password);
-            */
-            if(newUserValid==1)
-            {
-                mEmailView.setError("Invalid Username or Password");
-                focusView=mEmailView;
-                cancel=true;
-                return;
-            }
-            else
-            {
-                attemptLogin(); //Attempt login now that we have registered the user
-            }
-
-        }
-        else {
-            //display error message
-            mEmailView.setError("Empty Username or Password for Registration");
-            focusView = mPasswordView;
-            cancel = true;
-            focusView.requestFocus();
-        }
-
-       return;
-    }
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
     }
@@ -148,9 +97,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        /*if (mAuthTask != null) {
+        if (mAuthTask != null) {
             return;
-        }*/
+        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -172,7 +121,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
@@ -189,33 +138,55 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            //showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
-            CharSequence two = "Attempting Login";
-            Toast toast = Toast.makeText(context, two, Toast.LENGTH_SHORT);
-            toast.show();
-            //Attempt Login
-            Client client = new Client(email);
-            int check=client.checkLogin(email,password);
-            if(check==0){
-                Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
-                startActivity(intent);
-            }
-            else{
-                mEmailView.setError("Invalid username or password");
-                focusView = mEmailView;
-                focusView.requestFocus();
-            }
+            showProgress(true);
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
         }
     }
 
     private boolean isEmailValid(String email) {
-        return !email.contains(" ");
+
+        //Check for valid length
+        if(email.length() < 8)
+                return false;
+
+        //Check if email has proper suffix
+        if(!(email.endsWith(".edu") || email.endsWith(".com") || email.endsWith(".org") || email.endsWith(".net")))
+            return false;
+
+        //check if email has @ and does not start with @
+        if(!(email.contains("@")) || email.charAt(0)=='@')
+            return false;
+
+        //check if @ is last character
+        if(email.indexOf("@") != email.length()-1)
+            return false;
+
+        //get characters before and after ampersand
+        char beforeAt=email.charAt(email.indexOf("@")-1);
+        char afterAt=email.charAt(email.indexOf("@")+1);
+
+        //check for valid character before and after @
+        if(!(character.isAlphaNumeric(beforeAt) && character.isAlphaNumeric(afterAt)))
+            return false;
+
+        return true;
     }
 
+
     private boolean isPasswordValid(String password) {
-        return !password.isEmpty();
+        //Check for valid length
+        if(password.length() < 5 || password.length() > 20)
+                return false;
+
+        //check for spaces in password
+        for(int i=0;i<password.length();i++){
+            if(character.isSpace(password.charAt(i)))
+                return false;
+        }
+
+
+        return true;
     }
 
     /**
@@ -302,7 +273,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(LoginActivity.this,
+                new ArrayAdapter<String>(LoginActivity2.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -324,19 +295,45 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            //Client.setUser(username, password);
-            //Send username and client to client.java to attempt login
-            return false;
+            // TOO: attempt authentication against a network service.
+
+            try {
+                // Simulate network access.
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+
+            for (String credential : DUMMY_CREDENTIALS) {
+                String[] pieces = credential.split(":");
+                if (pieces[0].equals(mEmail)) {
+                    // Account exists, return true if the password matches.
+                    return pieces[1].equals(mPassword);
+                }
+            }
+
+            // TOO: register the new account here.
+            return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
+            //TODO: Message sent back from server should specify we have an admin
+            boolean isAdmin = false;
             if (success) {
                 finish();
+                //TODO: Create intents to move to different activities
+                if(isAdmin==true){
+                    Intent intent = new Intent(LoginActivity2.this,AdminActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(LoginActivity2.this,StudentActivity.class);
+                    startActivity(intent);
+                }
+
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
