@@ -14,7 +14,7 @@ public class APIServer {
 	public String executeRequest(String command) {
         if (command.substring(0, 5).equals("LOGIN")) {
 			if(checkLoginMessage(command)) {
-				return "SUCCESS";
+				return "SUCCESSUSER";
 			} else {
 				return "FAILURE";
 			}
