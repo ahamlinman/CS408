@@ -13,10 +13,11 @@ import java.io.BufferedWriter;
  * Created by Cris on 2/12/2015.
  */
 public class Client {
-    private static final int SERVERPORT = 1994; // port?
-    private final static String SERVER = "tracy-central address goes here";
+    private static final int SERVERPORT = 80; // port?
+    private final static String SERVER = "128.211.207.139";
 
     private final static String LOGIN = "LOGIN";
+    private final static String ADDUSER = "ADDUSER";
     private final static int MSG_SIZE = 64;
 
     private String username = "";
@@ -67,6 +68,46 @@ public class Client {
     }
 
     /**
+     * Sends an ADDUSER message to the server to add a new user to the database
+     *
+     * @param username
+     * @param password
+     * @return 0 on success and 1 on failure
+     */
+    public int addUser(String username, String password){
+        if(initSocket() == 1)
+            return 1;
+        try {
+            // Write a checkLogin message to the server
+            bw.write(ADDUSER, 0, ADDUSER.length());
+            bw.write(" " + username + " " + password + "\n", 0, username.length() +
+                    password.length() + 3);
+            bw.flush();
+
+            // Read socket until it's closed to determine response from server
+            bytesRead = br.read(msg, 0, MSG_SIZE);
+            while (bytesRead != -1) {
+                if (new String(msg).trim().equals("FAILURE"))           // credentials failed
+                    return 1;
+                else if (new String(msg).trim().equals("SUCCESS"))      // credentials verified for user
+                    return 0;
+                bytesRead = br.read(msg, 0, MSG_SIZE);
+            }
+
+            return 1;
+        }
+        catch (IOException e) {
+            System.out.println("IO Exception: " + e.toString());
+            e.printStackTrace();
+            return 1;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+
+    /**
      * Sends a LOGIN message to the server to check if the specified username/password pair exists.
      *
      * LOGIN messages will appear as follows:
@@ -79,7 +120,7 @@ public class Client {
      */
     public int checkLogin(String username, String password) {
         if (initSocket() == 1)
-            return 1;
+            return 0;
 
         try {
             // Write a checkLogin message to the server
@@ -91,10 +132,12 @@ public class Client {
             // Read socket until it's closed to determine response from server
             bytesRead = br.read(msg, 0, MSG_SIZE);
             while (bytesRead != -1) {
-                if (new String(msg).trim().equals("SUCCESS"))           // credentials verified
+                if (new String(msg).trim().equals("FAILURE"))           // credentials failed
                     return 0;
-                else if (new String(msg).trim().equals("FAILURE"))      // credentials not found
+                else if (new String(msg).trim().equals("SUCCESSUSER"))      // credentials verified for user
                     return 1;
+                else if (new String(msg).trim().equals("SUCCESSADMIN"))
+                    return 2;
                 bytesRead = br.read(msg, 0, MSG_SIZE);
             }
 

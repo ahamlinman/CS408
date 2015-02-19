@@ -110,10 +110,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             int newUserValid=1;
-            /*Client client = new Client(email);
+            Client client = new Client(email);
             newUserValid= client.addUser(email,password);
             //newUserValid = Client.addUser(email,password);
-            */
+
             if(newUserValid==1)
             {
                 mEmailView.setError("Invalid Username or Password");
