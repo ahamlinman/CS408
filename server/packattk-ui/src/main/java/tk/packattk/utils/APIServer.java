@@ -47,6 +47,6 @@ public class APIServer {
     	// do some database stuff to verify username + password combo
         
         // For now, just use a hardcoded username/password
-        return username.equals("user") && password.equals("password");
+        return username.equals("user@purdue.edu") && password.equals("password");
     }
 }
