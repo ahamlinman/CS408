@@ -3,7 +3,7 @@ package tk.packattk;
 import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.LoginWindow;
-import tk.packattk.utils.Server;
+import tk.packattk.utils.APIServer;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -80,7 +80,7 @@ public class LoginUI extends UI {
 					return;
 				}
 				
-				Server server = new Server();
+				APIServer server = new APIServer();
 				if(server.checkLogin(username, password)) {
 					Notification.show("Success!");
 				} else {
