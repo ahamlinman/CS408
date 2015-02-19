@@ -12,7 +12,7 @@ public class APIServer {
 	 * @author Cris, Alex
 	 */
 	public String executeRequest(String command) {
-        if (command.substring(0, 5).equals("LOGIN")) {
+        if (command.startsWith("LOGIN")) {
 			if(checkLoginMessage(command)) {
 				return "SUCCESSUSER";
 			} else {
