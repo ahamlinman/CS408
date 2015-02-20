@@ -20,12 +20,15 @@ public class databaseWrappers
             stmt.executeUpdate(sql);
             sql = "create table people(" +
                     "pid            varchar(255), " +
+
                     "lastName       varchar(255), " +
                     "firstName      varchar(255), " +
                     "location       varchar(255), " +
                     "packages       varchar(255), " +
                     "numPackages    integer, " +
-                    "isAdmin        integer)";
+                    "isAdmin        integer), "  +
+                    "username       varchar(255), " +
+                    "password       varchar(255);";
             stmt.executeUpdate(sql);
             sql = "create table packages(" +
                     "name           varchar(255), " +
@@ -43,7 +46,7 @@ public class databaseWrappers
         }
     }
 
-    public static void addPerson(Person p)
+    public static void addPerson(Person p)//Check login?
     {
         try
         {
