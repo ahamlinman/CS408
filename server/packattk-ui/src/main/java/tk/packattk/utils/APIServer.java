@@ -1,5 +1,7 @@
 package tk.packattk.utils;
 
+import java.sql.SQLException;
+
 /**
  * Created by Cris on 2/12/2015.
  */
@@ -36,6 +38,11 @@ public class APIServer {
         String username = credentials.substring(0, credentials.indexOf(" "));
         String password = credentials.substring(credentials.indexOf(" ") + 1);
 
-        return databaseWrappers.checkLogin(username, password);
+        try {
+			return databaseWrappers.checkLogin(username, password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
     }
 }

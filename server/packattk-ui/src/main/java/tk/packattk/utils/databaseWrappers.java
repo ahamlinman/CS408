@@ -46,22 +46,15 @@ public class databaseWrappers
         }
     }
 
-    public static boolean checkLogin(String username, String password)
+    public static boolean checkLogin(String username, String password) throws SQLException
     {   //Checks to see if the person logging in is in the database.
-        try
-        {
-            Connection conn = sqliteConnection.dbConnector();
-            Statement stmt = conn.createStatement();
-            ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-                    "username=" + username + " AND password=" + password + ";" );
-            stmt.close();
-            conn.close();
-            return result.next(); //True if the result has a match, false if no match found
-        } catch (Exception e)
-        {
-            //Print error somewhere?
-        }
-        return false;
+        Connection conn = sqliteConnection.dbConnector();
+        Statement stmt = conn.createStatement();
+        ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
+                "username=" + username + " AND password=" + password + ";" );
+        stmt.close();
+        conn.close();
+        return result.next(); //True if the result has a match, false if no match found
     }
 
     public static boolean addPerson(Person p)
