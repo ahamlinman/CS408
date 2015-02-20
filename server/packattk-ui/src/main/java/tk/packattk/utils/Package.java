@@ -12,6 +12,7 @@ public class Package {
     private String destination;		// desired destination of the package
     private Person student;			// student the package is addressed to
     private Person admin;			// admin who most recently scanned the package
+    //TODO: Add check-in time
 
     /*
      * Constructor for the Package class.
@@ -23,6 +24,7 @@ public class Package {
         this.destination = destination;
         this.student = student;
         this.admin = admin;
+        //TODO: Add check-in time
     }
 
     /*
@@ -36,6 +38,7 @@ public class Package {
 
     /*
      * Getters and setters
+     * TODO: Add check-in time
      */
     public void setName(String name) {
         this.name = name;

@@ -36,6 +36,7 @@ public class databaseWrappers
                     "destination    varchar(255), " +
                     "student        varchar(255), " +
                     "admin          varchar(255))";
+            //TODO: Add check-in time
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
@@ -143,6 +144,7 @@ public class databaseWrappers
                     p.getDestination()  + "," +
                     p.getStudent().getPid() + "," +
                     p.getAdmin().getPid()   + ";";
+            //TODO: Add check-in time
             stmt.executeUpdate(sql);
             //Next, look up the person and add the package to their list.
             ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
@@ -226,6 +228,7 @@ public class databaseWrappers
                     result.getString("destination"),
                     student,
                     admin);
+            //TODO: Add check-in time
             stmt.close();
             conn.close();
             return p;
@@ -294,6 +297,7 @@ public class databaseWrappers
                     "student="      + p.getStudent().getPid()   + ", " +
                     "admin="        + p.getAdmin().getPid()     + ", " +
                     "WHERE tracking=" + p.getTracking()         + ";";
+            //TODO: Add check-in time
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
