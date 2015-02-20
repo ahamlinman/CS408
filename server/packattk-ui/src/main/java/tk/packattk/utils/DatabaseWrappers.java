@@ -51,7 +51,7 @@ public class DatabaseWrappers
         Connection conn = SQLiteConnection.dbConnector();
         Statement stmt = conn.createStatement();
         ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-                "username=" + username + " AND password=" + password + ";" );
+                "username='" + username + "' AND password='" + password + "';" );
         stmt.close();
         conn.close();
         return result.next(); //True if the result has a match, false if no match found
@@ -68,15 +68,15 @@ public class DatabaseWrappers
                     "pid, lastName, firstName," +
                     "location, packages, numPackages, " +
                     "isAdmin, username, password)" +
-                    "VALUES(" +
-                    p.getPid()          + ", " +
-                    p.getLastName()     + ", " +
-                    p.getFirstName()    + ", " +
-                    p.getLocation()     + ", " +
+                    "VALUES('" +
+                    p.getPid()          + "', '" +
+                    p.getLastName()     + "', '" +
+                    p.getFirstName()    + "', '" +
+                    p.getLocation()     + "', " +
                     "', ' , 0, " +              // Insert the string ', ' as the packages and 0 for numPackages
-                    isAdmin             + ", " +
-                    p.getUsername()     + ", " +
-                    p.getPassword()     + ");";
+                    isAdmin             + ", '" +
+                    p.getUsername()     + "', '" +
+                    p.getPassword()     + "');";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
@@ -95,7 +95,7 @@ public class DatabaseWrappers
             Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-                    "pid=" + pid + ";" );
+                    "pid='" + pid + "';" );
             if (!result.next()){
                 stmt.close();
                 conn.close();
@@ -130,18 +130,18 @@ public class DatabaseWrappers
             String sql = "INSERT INTO packages(" +
                     "name, tracking, location" +
                     "destination, student, admin" +
-                    "VALUES(" +
-                    p.getName()         + "," +
-                    p.getTracking()     + "," +
-                    p.getLocation()     + "," +
-                    p.getDestination()  + "," +
-                    p.getStudent().getPid() + "," +
-                    p.getAdmin().getPid()   + ";";
+                    "VALUES('" +
+                    p.getName()         + "', '" +
+                    p.getTracking()     + "', '" +
+                    p.getLocation()     + "', '" +
+                    p.getDestination()  + "', '" +
+                    p.getStudent().getPid() + "', '" +
+                    p.getAdmin().getPid()   + "';";
             //TODO: Add check-in time
             stmt.executeUpdate(sql);
             //Next, look up the person and add the package to their list.
             ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
-                    "pid=" + p.getStudent().getPid() + ";" );
+                    "pid='" + p.getStudent().getPid() + "';" );
             if (!result.next())
             {
                 stmt.close();
@@ -153,9 +153,9 @@ public class DatabaseWrappers
             packages += p.getTracking() + ", "; //Add the tracking number to the list of packages
             numPackages += 1; //Increase the number of packages by one
             sql = "UPDATE people SET " +
-                    "packages=" + packages + ", " +
-                    "numPackages=" + numPackages + " " +
-                    "WHERE pid=" + p.getStudent().getPid() + ";";
+                    "packages='" + packages + "', " +
+                    "numPackages='" + numPackages + "' " +
+                    "WHERE pid='" + p.getStudent().getPid() + "';";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
@@ -174,7 +174,7 @@ public class DatabaseWrappers
             Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
-                    "tracking=" + trackingNum + ";");
+                    "tracking='" + trackingNum + "';");
             if (!result.next()){
                 stmt.close();
                 conn.close();
@@ -183,9 +183,9 @@ public class DatabaseWrappers
             String studentId =  result.getString("student");
             String adminId = result.getString("admin");
             ResultSet result2 = stmt.executeQuery("SELECT * FROM people WHERE " +
-                    "pid=" + studentId + ";");
+                    "pid='" + studentId + "';");
             ResultSet result3 = stmt.executeQuery("SELECT * FROM people WHERE " +
-                    "pid=" + adminId + ";" );
+                    "pid='" + adminId + "';" );
             if (!result2.next()){
                 stmt.close();
                 conn.close();
@@ -240,7 +240,7 @@ public class DatabaseWrappers
             Statement stmt = conn.createStatement();
             //Update the student (remove tracking number, decrement numPackages)
             ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
-                    "pid=" + p.getStudent().getPid() + ";" );
+                    "pid='" + p.getStudent().getPid() + "';" );
             if (!result.next())
             {
                 stmt.close();
@@ -252,12 +252,12 @@ public class DatabaseWrappers
             packages = packages.replace(p.getTracking() + ", ", ""); //Delete the tracking number to the list of packages
             numPackages -= 1; //Decrease the number of packages by one
             String sql = "UPDATE people SET " +
-                    "packages=" + packages + ", " +
-                    "numPackages=" + numPackages + " " +
+                    "packages='" + packages + "', " +
+                    "numPackages='" + numPackages + "' " +
                     "WHERE pid=" + p.getStudent().getPid() + ";";
             stmt.executeUpdate(sql);
             //Delete the package
-            sql = "DELETE FROM packages WHERE tracking=" + p.getTracking() +";";
+            sql = "DELETE FROM packages WHERE tracking='" + p.getTracking() +"';";
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
@@ -276,7 +276,7 @@ public class DatabaseWrappers
             Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery( "SELECT * FROM packages WHERE " +
-                    "tracking=" + p.getTracking() + ";" );
+                    "tracking='" + p.getTracking() + "';" );
             if (!result.next())
             {
                 stmt.close();
@@ -284,12 +284,12 @@ public class DatabaseWrappers
                 return false;
             }
             String sql = "UPDATE packages SET " +
-                    "name="         + p.getName()               + ", " +
-                    "location="     + p.getLocation()           + ", " +
-                    "destination="  + p.getDestination()        + ", " +
-                    "student="      + p.getStudent().getPid()   + ", " +
-                    "admin="        + p.getAdmin().getPid()     + ", " +
-                    "WHERE tracking=" + p.getTracking()         + ";";
+                    "name='"         + p.getName()               + "', " +
+                    "location='"     + p.getLocation()           + "', " +
+                    "destination='"  + p.getDestination()        + "', " +
+                    "student='"      + p.getStudent().getPid()   + "', " +
+                    "admin='"        + p.getAdmin().getPid()     + "', " +
+                    "WHERE tracking='" + p.getTracking()         + "';";
             //TODO: Add check-in time
             stmt.executeUpdate(sql);
             stmt.close();
