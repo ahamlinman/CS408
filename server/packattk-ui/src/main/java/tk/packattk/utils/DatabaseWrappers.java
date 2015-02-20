@@ -8,43 +8,6 @@ import java.sql.*;
  */
 public class DatabaseWrappers
 {
-    public static void createTables()
-    {// YO DOGS, ONLY RUN THIS IF YOU WANNA NUKE EVERYTHING...
-        try
-        {
-            Connection conn = SQLiteConnection.dbConnector();
-            Statement stmt = conn.createStatement();
-            String sql = "DROP TABLE IF EXISTS people";
-            stmt.executeUpdate(sql);
-            sql = "DROP TABLE IF EXISTS packages";
-            stmt.executeUpdate(sql);
-            sql = "CREATE TABLE people(" +
-                    "pid            varchar(255), " +
-                    "lastName       varchar(255), " +
-                    "firstName      varchar(255), " +
-                    "location       varchar(255), " +
-                    "packages       varchar(255), " +
-                    "numPackages    integer, " +
-                    "isAdmin        integer), "  +
-                    "username       varchar(255), " +
-                    "password       varchar(255);";
-            stmt.executeUpdate(sql);
-            sql = "CREATE TABLE packages(" +
-                    "name           varchar(255), " +
-                    "tracking       varchar(255), " +
-                    "location       varchar(255), " +
-                    "destination    varchar(255), " +
-                    "student        varchar(255), " +
-                    "admin          varchar(255))";
-            //TODO: Add check-in time
-            stmt.executeUpdate(sql);
-            stmt.close();
-            conn.close();
-        } catch (Exception e)
-        {
-            //Print error somewhere?
-        }
-    }
 
     public static boolean checkLogin(String username, String password) throws SQLException
     {   //Checks to see if the person logging in is in the database.
