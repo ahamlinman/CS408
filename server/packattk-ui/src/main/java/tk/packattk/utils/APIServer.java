@@ -38,21 +38,4 @@ public class APIServer {
 
         return databaseWrappers.checkLogin(username, password);
     }
-    
-    /**
-     * NOTE: I don't think this is necessary anymore?
-     *
-     * TODO: Move this check to the database wrapper file
-     * Check login credentials
-     * @param username The username
-     * @param password The password
-     * @return Boolean true/false whether the credentials are valid
-     */
-    /*
-    public boolean checkLogin(String username, String password) {
-    	// do some database stuff to verify username + password combo
-        
-        // For now, just use a hardcoded username/password
-        return ;
-    }*/
 }
