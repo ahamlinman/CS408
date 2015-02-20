@@ -29,24 +29,30 @@ public class APIServer {
      * @author Cris, Alex
      */
     public boolean checkLoginMessage(String msg) {
+        if (msg.length() == 0)
+               return false;
+
         String credentials = msg.substring(msg.indexOf(" ") + 1);
         String username = credentials.substring(0, credentials.indexOf(" "));
         String password = credentials.substring(credentials.indexOf(" ") + 1);
 
-        return checkLogin(username, password);
+        return databaseWrappers.checkLogin(username, password);
     }
     
     /**
+     * NOTE: I don't think this is necessary anymore?
+     *
      * TODO: Move this check to the database wrapper file
      * Check login credentials
      * @param username The username
      * @param password The password
      * @return Boolean true/false whether the credentials are valid
      */
+    /*
     public boolean checkLogin(String username, String password) {
     	// do some database stuff to verify username + password combo
         
         // For now, just use a hardcoded username/password
-        return username.equals("user@purdue.edu") && password.equals("password");
-    }
+        return ;
+    }*/
 }

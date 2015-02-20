@@ -81,7 +81,7 @@ public class LoginUI extends UI {
 				}
 				
 				APIServer server = new APIServer();
-				if(server.checkLogin(username, password)) {
+				if(server.checkLoginMessage("LOGIN" + " " + username + " " + password)) {
 					Notification.show("Success!");
 				} else {
 					Notification.show("Incorrect username/password. Please try again.");
