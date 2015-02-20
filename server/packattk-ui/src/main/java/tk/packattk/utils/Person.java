@@ -13,17 +13,21 @@ public class Person {
     private ArrayList<Package> packages = new ArrayList<Package>();			// stores the list of packages associated with person in the system
     private int numPackages;												// number of packages intended for person in system
     private boolean isAdmin;												// true if person is an admin, false otherwise
+    private String username;
+    private String password;
 
     /*
      * Constructor for Person class.
      */
-    public Person(String pid, String lastName, String firstName, String location, int numPackages, boolean isAdmin) {
+    public Person(String pid, String lastName, String firstName, String location, int numPackages, boolean isAdmin, String username, String password) {
         this.pid = pid;
         this.lastName = lastName;
         this.firstName = firstName;
         this.location = location;
         this.numPackages = numPackages;
         this.isAdmin = isAdmin;
+        this.username = username;
+        this.password = password;
     }
 
     /*
@@ -65,6 +69,14 @@ public class Person {
         this.isAdmin = isAdmin;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getPid() {
         return pid;
     }
@@ -87,6 +99,14 @@ public class Person {
 
     public boolean getIsAdmin() {
         return isAdmin;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
 
