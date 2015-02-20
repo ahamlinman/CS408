@@ -50,10 +50,12 @@ public class databaseWrappers
         try
         {
             Connection conn = sqliteConnection.dbConnector();
-            //TODO: Evan: Finish this function
-
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
+                    "username=" + username + " AND password=" + password + ";" );
+            stmt.close();
             conn.close();
-            return true;
+            return result.next(); //True if the result has a match, false if no match found
         } catch (Exception e)
         {
             //Print error somewhere?
@@ -61,7 +63,7 @@ public class databaseWrappers
         return false;
     }
 
-    public static void addPerson(Person p)
+    public static boolean addPerson(Person p)
     {   //Adds the person p to the database.
         try
         {
@@ -84,10 +86,12 @@ public class databaseWrappers
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
+            return true;
         } catch (Exception e)
         {
             //Print error somewhere?
         }
+        return false;
     }
 
     public static Person getPerson(String pid)
@@ -98,6 +102,11 @@ public class databaseWrappers
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
                     "pid=" + pid + ";" );
+            if (!result.next()){
+                stmt.close();
+                conn.close();
+                return null;
+            }
             Person p = new Person(
                     result.getString("pid"),
                     result.getString("lastName"),
@@ -117,7 +126,7 @@ public class databaseWrappers
         return null;
     }
 
-    public static void addPackage(Package p)
+    public static boolean addPackage(Package p)
     {   //Adds a new package to the database when scanned in.
         try
         {
@@ -138,6 +147,12 @@ public class databaseWrappers
             //Next, look up the person and add the package to their list.
             ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
                     "pid=" + p.getStudent().getPid() + ";" );
+            if (!result.next())
+            {
+                stmt.close();
+                conn.close();
+                return false;
+            }
             String packages = result.getString("packages");
             int numPackages = result.getInt("numPackages");
             packages += p.getTracking() + ", "; //Add the tracking number to the list of packages
@@ -149,10 +164,12 @@ public class databaseWrappers
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
+            return true;
         } catch (Exception e)
         {
             //Print error somewhere?
         }
+        return false;
     }
 
     public static Package getPackageInfo(String trackingNum)
@@ -162,14 +179,25 @@ public class databaseWrappers
             Connection conn = sqliteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
-                    "tracking=" + trackingNum + ";" );
+                    "tracking=" + trackingNum + ";");
+            if (!result.next()){
+                stmt.close();
+                conn.close();
+                return null;
+            }
             String studentId =  result.getString("student");
             String adminId = result.getString("admin");
             ResultSet result2 = stmt.executeQuery("SELECT * FROM people WHERE " +
-                    "pid=" + studentId + ";" );
+                    "pid=" + studentId + ";");
             ResultSet result3 = stmt.executeQuery("SELECT * FROM people WHERE " +
                     "pid=" + adminId + ";" );
-            Person student = new Person(result.getString("pid"),
+            if (!result2.next()){
+                stmt.close();
+                conn.close();
+                return null;
+            }
+            Person student = new Person(
+                    result2.getString("pid"),
                     result2.getString("lastName"),
                     result2.getString("firstName"),
                     result2.getString("location"),
@@ -177,7 +205,13 @@ public class databaseWrappers
                     result2.getInt("isAdmin") == 1,  //isAdmin is stored as an int in the database. So it must be converted to boolean
                     result2.getString("username"),
                     result2.getString("password"));
-            Person admin = new Person(result.getString("pid"),
+            if (!result3.next()){
+                stmt.close();
+                conn.close();
+                return null;
+            }
+            Person admin = new Person(
+                    result.getString("pid"),
                     result3.getString("lastName"),
                     result3.getString("firstName"),
                     result3.getString("location"),
@@ -190,7 +224,8 @@ public class databaseWrappers
                     result.getString("tracking"),
                     result.getString("location"),
                     result.getString("destination"),
-                    student, admin);
+                    student,
+                    admin);
             stmt.close();
             conn.close();
             return p;
@@ -201,31 +236,72 @@ public class databaseWrappers
         return null;
     }
 
-    public static void removePackage(Package p)
+    public static boolean removePackage(Package p)
     {   //Uses a package's tracking number to remove it from the database.
         try
         {
             Connection conn = sqliteConnection.dbConnector();
-            //TODO: Evan: Finish this function
-
+            Statement stmt = conn.createStatement();
+            //Update the student (remove tracking number, decrement numPackages)
+            ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
+                    "pid=" + p.getStudent().getPid() + ";" );
+            if (!result.next())
+            {
+                stmt.close();
+                conn.close();
+                return false;
+            }
+            String packages = result.getString("packages");
+            int numPackages = result.getInt("numPackages");
+            packages = packages.replace(p.getTracking() + ", ", ""); //Delete the tracking number to the list of packages
+            numPackages -= 1; //Decrease the number of packages by one
+            String sql = "UPDATE people SET " +
+                    "packages=" + packages + ", " +
+                    "numPackages=" + numPackages + " " +
+                    "WHERE pid=" + p.getStudent().getPid() + ";";
+            stmt.executeUpdate(sql);
+            //Delete the package
+            sql = "DELETE FROM packages WHERE tracking=" + p.getTracking() +";";
+            stmt.executeUpdate(sql);
+            stmt.close();
             conn.close();
+            return true;
         } catch (Exception e)
         {
             //Print error somewhere?
         }
+        return false;
     }
 
-    public static void updatePackage(Package p)
+    public static boolean updatePackage(Package p)
     {   //Looks up the package's tracking number and modifies the matching package.
         try
         {
             Connection conn = sqliteConnection.dbConnector();
-            //TODO: Evan: Finish this function
-
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery( "SELECT * FROM packages WHERE " +
+                    "tracking=" + p.getTracking() + ";" );
+            if (!result.next())
+            {
+                stmt.close();
+                conn.close();
+                return false;
+            }
+            String sql = "UPDATE packages SET " +
+                    "name="         + p.getName()               + ", " +
+                    "location="     + p.getLocation()           + ", " +
+                    "destination="  + p.getDestination()        + ", " +
+                    "student="      + p.getStudent().getPid()   + ", " +
+                    "admin="        + p.getAdmin().getPid()     + ", " +
+                    "WHERE tracking=" + p.getTracking()         + ";";
+            stmt.executeUpdate(sql);
+            stmt.close();
             conn.close();
+            return true;
         } catch (Exception e)
         {
             //Print error somewhere?
         }
+        return false;
     }
 }
