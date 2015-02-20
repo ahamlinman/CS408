@@ -198,8 +198,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             //Attempt Login
             Client client = new Client(email);
             int check=client.checkLogin(email,password);
-            if(check==0){
+            if(check==1){
                 Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
+                startActivity(intent);
+            }
+            else if(check==2){
+                Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
                 startActivity(intent);
             }
             else{
