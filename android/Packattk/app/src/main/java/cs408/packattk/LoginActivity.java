@@ -211,11 +211,48 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     private boolean isEmailValid(String email) {
-        return !email.contains(" ");
+
+        //Check for valid length
+        if(email.length() < 8)
+            return false;
+
+        //Check if email has proper suffix
+        if(!(email.endsWith(".edu") || email.endsWith(".com") || email.endsWith(".org") || email.endsWith(".net")))
+            return false;
+
+        //check if email has @ and does not start with @
+        if(!(email.contains("@")) || email.charAt(0)=='@')
+            return false;
+
+        //check if @ is last character
+        if(email.indexOf("@") != email.length()-1)
+            return false;
+
+        //get characters before and after ampersand
+        char beforeAt=email.charAt(email.indexOf("@")-1);
+        char afterAt=email.charAt(email.indexOf("@")+1);
+
+        //check for valid character before and after @
+        if(!(character.isAlphaNumeric(beforeAt) && character.isAlphaNumeric(afterAt)))
+            return false;
+
+        return true;
     }
 
     private boolean isPasswordValid(String password) {
-        return !password.isEmpty();
+
+        //Check for valid length
+        if(password.length() < 5 || password.length() > 20)
+            return false;
+
+        //check for spaces in password
+        for(int i=0;i<password.length();i++){
+            if(character.isSpace(password.charAt(i)))
+                return false;
+        }
+
+
+        return true;
     }
 
     /**
