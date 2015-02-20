@@ -9,12 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import tk.packattk.utils.APIServer;
-
 import com.vaadin.server.VaadinServlet;
 
 @WebServlet(urlPatterns = "/api/*", name = "APIServlet")
-public class APIServlet extends VaadinServlet {
+public class APIProxyServlet extends VaadinServlet {
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected void service(HttpServletRequest request,

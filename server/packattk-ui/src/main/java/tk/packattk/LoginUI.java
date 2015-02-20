@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.LoginWindow;
-import tk.packattk.utils.databaseWrappers;
+import tk.packattk.utils.DatabaseWrappers;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -33,6 +33,8 @@ import com.vaadin.ui.VerticalLayout;
 @Title("Packattk: Log In")
 public class LoginUI extends UI {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 		setContent(buildInterface());
@@ -48,6 +50,8 @@ public class LoginUI extends UI {
 		mainItem.addItem("About", null);
 
 		mainMenu.addItem("Create Account", new Command() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				getPage().setLocation("/account/create");
@@ -67,6 +71,8 @@ public class LoginUI extends UI {
 		layout.setComponentAlignment(login, Alignment.MIDDLE_CENTER);
 
 		login.addLoginListener(new ClickListener() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				String username = login.getUsername();
@@ -83,7 +89,7 @@ public class LoginUI extends UI {
 				}
 
 				try {
-					if(databaseWrappers.checkLogin(username, password)) {
+					if(DatabaseWrappers.checkLogin(username, password)) {
 						Notification.show("Success!");
 					} else {
 						Notification.show("Incorrect username/password. Please try again.");
@@ -101,5 +107,6 @@ public class LoginUI extends UI {
 	@WebServlet(urlPatterns = "/*", name = "LoginUIServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = LoginUI.class, productionMode = false)
 	public static class LoginUIServlet extends VaadinServlet {
+		private static final long serialVersionUID = 1L;
 	}
 }

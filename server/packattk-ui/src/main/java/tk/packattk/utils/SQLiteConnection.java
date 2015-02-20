@@ -5,7 +5,7 @@ import java.sql.*;
 /**
 * Created by Evan on 2/15/2015.
 */
-public class sqliteConnection {
+public class SQLiteConnection {
     Connection conn = null;
     public static Connection dbConnector()
     {

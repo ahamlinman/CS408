@@ -3,7 +3,6 @@ package tk.packattk.ui;
 import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.AccountCreateWindow;
-import tk.packattk.components.LoginWindow;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -31,6 +30,8 @@ import com.vaadin.ui.VerticalLayout;
 @Title("Packattk: Create Account")
 public class AccountCreateUI extends UI {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 		setContent(buildInterface());
@@ -46,6 +47,8 @@ public class AccountCreateUI extends UI {
 		mainItem.addItem("About", null);
 
 		mainMenu.addItem("Log In", new Command() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				getPage().setLocation("/");
@@ -65,6 +68,8 @@ public class AccountCreateUI extends UI {
 		layout.setComponentAlignment(create, Alignment.MIDDLE_CENTER);
 
 		create.addCreateListener(new ClickListener() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void buttonClick(ClickEvent event) {
 				String email = create.getEmail();
@@ -80,7 +85,7 @@ public class AccountCreateUI extends UI {
 					return;
 				}
 
-				Notification.show("Account creation");
+				Notification.show("Account creation: " + email + " / " + password);
 			}
 		});
 
@@ -90,5 +95,6 @@ public class AccountCreateUI extends UI {
 	@WebServlet(urlPatterns = "/account/create/*", name = "AccountCreateUIServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = AccountCreateUI.class, productionMode = false)
 	public static class AccountCreateUIServlet extends VaadinServlet {
+		private static final long serialVersionUID = 1L;
 	}
 }

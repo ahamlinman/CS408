@@ -1,6 +1,8 @@
-package tk.packattk.utils;
+package tk.packattk.api;
 
 import java.sql.SQLException;
+
+import tk.packattk.utils.DatabaseWrappers;
 
 /**
  * Created by Cris on 2/12/2015.
@@ -39,7 +41,7 @@ public class APIServer {
         String password = credentials.substring(credentials.indexOf(" ") + 1);
 
         try {
-			return databaseWrappers.checkLogin(username, password);
+			return DatabaseWrappers.checkLogin(username, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

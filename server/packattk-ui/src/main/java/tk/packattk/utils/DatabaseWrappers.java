@@ -6,13 +6,13 @@ import java.sql.*;
  *
  * This is the way that Java interacts with the database! Yay!
  */
-public class databaseWrappers
+public class DatabaseWrappers
 {
     public static void createTables()
     {// YO DOGS, ONLY RUN THIS IF YOU WANNA NUKE EVERYTHING...
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             String sql = "DROP TABLE IF EXISTS people";
             stmt.executeUpdate(sql);
@@ -48,7 +48,7 @@ public class databaseWrappers
 
     public static boolean checkLogin(String username, String password) throws SQLException
     {   //Checks to see if the person logging in is in the database.
-        Connection conn = sqliteConnection.dbConnector();
+        Connection conn = SQLiteConnection.dbConnector();
         Statement stmt = conn.createStatement();
         ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
                 "username=" + username + " AND password=" + password + ";" );
@@ -61,7 +61,7 @@ public class databaseWrappers
     {   //Adds the person p to the database.
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             int isAdmin = (p.getIsAdmin() ? 1 : 0);
             String sql = "INSERT INTO people(" +
@@ -92,7 +92,7 @@ public class databaseWrappers
     {   //Gets the information for the person with the id pid, given.
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
                     "pid=" + pid + ";" );
@@ -124,7 +124,7 @@ public class databaseWrappers
     {   //Adds a new package to the database when scanned in.
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             //First, add the package
             String sql = "INSERT INTO packages(" +
@@ -171,7 +171,7 @@ public class databaseWrappers
     {   //Gets the information about a package given the tracking number.
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
                     "tracking=" + trackingNum + ";");
@@ -236,7 +236,7 @@ public class databaseWrappers
     {   //Uses a package's tracking number to remove it from the database.
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             //Update the student (remove tracking number, decrement numPackages)
             ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
@@ -273,7 +273,7 @@ public class databaseWrappers
     {   //Looks up the package's tracking number and modifies the matching package.
         try
         {
-            Connection conn = sqliteConnection.dbConnector();
+            Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery( "SELECT * FROM packages WHERE " +
                     "tracking=" + p.getTracking() + ";" );
