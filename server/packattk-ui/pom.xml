@@ -38,6 +38,13 @@
 			<version>3.8.7</version>
 		</dependency>
 
+		<!-- Emails -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
         <!-- Custom components -->
         <dependency>
             <groupId>${project.groupId}</groupId>

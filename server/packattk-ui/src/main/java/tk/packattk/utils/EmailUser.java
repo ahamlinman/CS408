@@ -1,4 +1,4 @@
-//package tk.packattk.utils;
+package tk.packattk.utils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
