@@ -77,14 +77,12 @@ public class LoginUI extends UI {
 			public void buttonClick(ClickEvent event) {
 				String username = login.getUsername();
 				String password = login.getPassword();
-				
+
 				try {
 					login.getUsernameField().validate();
 					login.getPasswordField().validate();
 				} catch (InvalidValueException e) {
 					Notification.show(e.getMessage().length() == 0 ? "There was an error" : e.getMessage());
-					login.getUsernameField().setValidationVisible(true);
-					login.getPasswordField().setValidationVisible(true);
 					return;
 				}
 
