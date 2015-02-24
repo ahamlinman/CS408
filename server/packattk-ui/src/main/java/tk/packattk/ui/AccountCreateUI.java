@@ -3,6 +3,7 @@ package tk.packattk.ui;
 import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.AccountCreateWindow;
+import tk.packattk.utils.DatabaseWrappers;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -59,7 +60,7 @@ public class AccountCreateUI extends UI {
 
 		final AccountCreateWindow create = new AccountCreateWindow();
 		create.setWidth("50%");
-		create.setHeight("300px");
+		create.setHeight("500px");
 
 		layout.addComponent(mainMenu);
 		layout.addComponent(create);
@@ -72,20 +73,19 @@ public class AccountCreateUI extends UI {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				String email = create.getEmail();
-				String password = create.getPassword();
-
 				try {
-					create.getEmailField().validate();
-					create.getPasswordField().validate();
-					create.getPasswordConfirmField().validate();
-					create.validatePasswordsEqual();
+					create.validate();
 				} catch (InvalidValueException e) {
 					Notification.show(e.getMessage().length() == 0 ? "An error occurred" : e.getMessage());
 					return;
 				}
 
-				Notification.show("Account creation: " + email + " / " + password);
+				if (!DatabaseWrappers.addPerson(create.getPerson())) {
+					Notification.show("An error occurred and the account was not created.");
+					return;
+				}
+
+				getUI().getPage().setLocation("/");
 			}
 		});
 
