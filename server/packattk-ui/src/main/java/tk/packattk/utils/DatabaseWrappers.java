@@ -13,11 +13,13 @@ public class DatabaseWrappers
     {   //Checks to see if the person logging in is in the database.
         Connection conn = SQLiteConnection.dbConnector();
         Statement stmt = conn.createStatement();
-        ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-                "username='" + username + "' AND password='" + password + "';" );
+        String sql = "SELECT * FROM people WHERE username='" + username +
+				"' AND password='" + password + "';";
+        ResultSet result = stmt.executeQuery(sql);
+        boolean exists = result.next(); //True if the result has a match, false if no match found
         stmt.close();
         conn.close();
-        return result.next(); //True if the result has a match, false if no match found
+        return exists;
     }
 
     public static boolean addPerson(Person p)
