@@ -88,7 +88,7 @@ public class LoginUI extends UI {
 
 				try {
 					if(DatabaseWrappers.checkLogin(username, password)) {
-						Notification.show("Success!");
+						getUI().getPage().setLocation("/packages/view");
 					} else {
 						Notification.show("Incorrect username/password. Please try again.");
 					}
