@@ -5,6 +5,9 @@ import java.util.Date;
 
 import javax.servlet.annotation.WebServlet;
 
+import tk.packattk.components.PackageDetailDisplay;
+import tk.packattk.utils.Package;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -59,15 +62,18 @@ public class PackageListUI extends UI {
 
 		final VerticalSplitPanel packagePanel = new VerticalSplitPanel();
 
+		final PackageDetailDisplay detailDisplay = new PackageDetailDisplay();
+
 		final Table packageTable = new Table("Current Packages");
 		packageTable.addContainerProperty("Tracking Number", String.class, "");
 		packageTable.addContainerProperty("Scanned At", Date.class, null);
 		packageTable.addContainerProperty("Location", String.class, "");
 
+		final tk.packattk.utils.Package p = new Package("", "1Z555444333222111", "Shreve", "Shreve", null, null);
 		Item testRow = packageTable.getItem(packageTable.addItem());
-		testRow.getItemProperty("Tracking Number").setValue("1Z555444333222111");
+		testRow.getItemProperty("Tracking Number").setValue(p.getTracking());
 		testRow.getItemProperty("Scanned At").setValue(Calendar.getInstance().getTime());
-		testRow.getItemProperty("Location").setValue("Shreve");
+		testRow.getItemProperty("Location").setValue(p.getLocation());
 
 		packageTable.setSizeFull();
 		packageTable.setSelectable(true);
@@ -79,12 +85,17 @@ public class PackageListUI extends UI {
 			public void valueChange(ValueChangeEvent event) {
 				Item i = packageTable.getItem(packageTable.getValue());
 				if(i != null) {
-					Notification.show(i.getItemProperty("Tracking Number").getValue().toString());
+					detailDisplay.displayPackage(p);
+				} else {
+					detailDisplay.clearDisplay();
 				}
 			}
 		});
 
+		detailDisplay.setSizeFull();
+
 		packagePanel.setFirstComponent(packageTable);
+		packagePanel.setSecondComponent(detailDisplay);
 		packagePanel.setSplitPosition(50, Sizeable.UNITS_PERCENTAGE);
 		packagePanel.setSizeFull();
 
