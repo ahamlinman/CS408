@@ -167,9 +167,6 @@ public class LoginActivity extends Activity {
 
 
             //Attempt Login
-            Client client = new Client();
-            int check=client.checkLogin(email,password);
-
             AsyncTask<Void, Void, Integer> loginTask = new AsyncTask<Void, Void, Integer>() {
                 @Override
                 protected Integer doInBackground(Void... params) {

@@ -1,5 +1,7 @@
 package cs408.packattk;
 
+import android.util.Log;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -16,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Cris on 2/12/2015.
@@ -29,6 +33,8 @@ public class Client {
 
     public Client() {
     }
+
+    private final String TAG = "Client";
 
     /*
     * NOTE - SUPER IMPORTANT!!!
@@ -83,6 +89,7 @@ public class Client {
         HttpPost request = new HttpPost();
 
         try {
+            Log.v(TAG, "Executing command: " + command);
             request.setURI(new URI(API_ENDPOINT_URL));
             request.setEntity(new StringEntity(command, "UTF-8"));
 
@@ -135,6 +142,7 @@ public class Client {
     public int checkLogin(String username, String password) {
         String command = LOGIN + " " + username + " " + password + "\n";
         String response = executeServerCommand(command);
+        Log.v(TAG, "Login response: " + response);
 
         if(response.trim().equals("FAILURE"))
             return 0;
