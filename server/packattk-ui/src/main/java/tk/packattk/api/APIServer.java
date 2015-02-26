@@ -16,35 +16,40 @@ public class APIServer {
 	 * @author Cris, Alex
 	 */
 	public String executeRequest(String command) {
-        if (command.startsWith("LOGIN")) {
+		System.out.println("Received command: " + command);
+
+		if (command.startsWith("LOGIN")) {
 			if(checkLoginMessage(command)) {
 				return "SUCCESSUSER";
 			} else {
 				return "FAILURE";
 			}
-        }
-        return "INVALID";
-    }
+		}
+		return "INVALID";
+	}
 
-    /**
-     * Check a LOGIN message and verify the username/password
-     * @param msg The LOGIN message to check
-     * @return Whether the login was correct (true) or not (false)
-     * @author Cris, Alex
-     */
-    public boolean checkLoginMessage(String msg) {
-        if (msg.length() == 0)
-               return false;
+	/**
+	 * Check a LOGIN message and verify the username/password
+	 * @param msg The LOGIN message to check
+	 * @return Whether the login was correct (true) or not (false)
+	 * @author Cris, Alex
+	 */
+	public boolean checkLoginMessage(String msg) {
+		if (msg.length() == 0)
+			return false;
 
-        String credentials = msg.substring(msg.indexOf(" ") + 1);
-        String username = credentials.substring(0, credentials.indexOf(" "));
-        String password = credentials.substring(credentials.indexOf(" ") + 1);
+		String credentials = msg.substring(msg.indexOf(" ") + 1);
+		System.out.println("Credentials: " + credentials);
+		String username = credentials.substring(0, credentials.indexOf(" "));
+		System.out.println("Username: " + username);
+		String password = credentials.substring(credentials.indexOf(" ") + 1);
+		System.out.println("Password: " + password);
 
-        try {
+		try {
 			return DatabaseWrappers.checkLogin(username, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
-    }
+	}
 }
