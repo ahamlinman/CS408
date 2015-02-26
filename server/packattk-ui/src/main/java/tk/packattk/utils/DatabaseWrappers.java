@@ -1,4 +1,5 @@
 package tk.packattk.utils;
+import java.lang.Exception;
 import java.sql.*;
 
 /**
@@ -267,6 +268,24 @@ public class DatabaseWrappers
         return false;
     }
 
+   /*Get the number of packages a user has */
+    public static int getPackageAmount(String pid){
+        int packageNum = 0;
+        try
+        {
+            Connection conn = SQLiteConnection.dbConnector();
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE"+
+                    "student='"   + pid  +"';";
+            while(result.next())){
+                 packageNum++;
+            }
+        }catch (Exception e)
+        {
+            //
+        }
+        return packageNum;
+    }
     //TODO: Add getPackages(person p) function
 
     //TODO: Add getPackagesOlderThan(date) function

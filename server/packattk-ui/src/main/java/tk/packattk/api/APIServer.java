@@ -53,4 +53,55 @@ public class APIServer {
 			return false;
 		}
 	}
+   public boolean addNewUser( String msg){
+       if(msg.length() == 0)
+           return false;
+       String credentials = msg.substring(msg.indexOf(" ") + 1);
+       System.out.println("Credentials: " + credentials);
+       String username = credentials.substring(0, credentials.indexOf(" "));
+       System.out.println("Username: " + username);
+       credentials = credentials.substring(credentials.indexOf(" ")+1);
+       String password = credentials.substring(0,credentials.indexOf(" ") + 1);
+       System.out.println("Password: " + password);
+       credentials = credentials.substring(credentials.indexOf(" ")+1);
+       String firstName = credentials.substring(0, credentials.indexOf(" "));
+       System.out.println("Firstname: " + firstName);
+       credentials = credentials.substring(credentials.indexOf(" ")+1);
+       String lastName = credentials.substring(0, credentials.indexOf(" "));
+       System.out.println("Lastname: " + lastName);
+       credentials = credentials.substring(0,credentials.indexOf(" ")+1);
+       boolean isadmin = Boolean.parseBoolean(credentials.substring(0,credentials.indexOf(" ")));
+       System.out.println("isAdmin: " + isadmin);
+       credentials = credentials.substring(0,credentials.indexOf(" ")+1);
+       String hall = credentials.substring(0,credentials.indexOf(" "));
+       System.out.println("Location: " + hall);
+       String idnum = credentials.substring(credentials.indexOf(" ")+1);
+       System.out.println("ID: " + idnum);
+       Person newuser = new Person(idnum, lastName,firstName,hall,0, isadmin);
+       try {
+           return DatabaseWrappers.addUser(newUser);
+       } catch (SQLException e) {
+           e.printStackTrace();
+           return false;
+       }
+   }
+
+    /*GETPACKAGES username*/
+   public boolean getPakages( String msg ){
+       if(msg.length() == 0 ){
+           return false;
+       }
+
+       String userid = msg.substring(credentials.indexOf(" ")+1);
+       System.out.println("Userid: " + userid);
+       try{
+           //return DatabaseWrappers.getPackages(userid);
+           return true; // will be removed once getPackage() is done in database
+       } catch (SQLException e) {
+           e.printStackTrace();
+           return false;
+       }
+   }
+
+
 }
