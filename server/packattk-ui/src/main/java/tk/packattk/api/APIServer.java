@@ -16,6 +16,7 @@ public class APIServer {
 	 * @author Cris, Alex
 	 */
 	public String executeRequest(String command) {
+		command = command.trim();
 		System.out.println("Received command: " + command);
 
 		if (command.startsWith("LOGIN")) {
