@@ -83,7 +83,7 @@ public class LoginActivity extends Activity {
 
         if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             int newUserValid=1;
-            Client client = new Client(email);
+            Client client = new Client();
             newUserValid= client.addUser(email,password);
             //newUserValid = Client.addUser(email,password);
 
@@ -167,13 +167,13 @@ public class LoginActivity extends Activity {
 
 
             //Attempt Login
-            Client client = new Client(email);
+            Client client = new Client();
             int check=client.checkLogin(email,password);
 
             AsyncTask<Void, Void, Integer> loginTask = new AsyncTask<Void, Void, Integer>() {
                 @Override
                 protected Integer doInBackground(Void... params) {
-                    Client client = new Client(email);
+                    Client client = new Client();
                     return client.checkLogin(email,password);
                 }
 
