@@ -27,10 +27,7 @@ public class Client {
     private final static String LOGIN = "LOGIN";
     private final static String ADDUSER = "ADDUSER";
 
-    private String username = "";
-
-    public Client(String username) {
-        this.username = username;
+    public Client() {
     }
 
     /*
