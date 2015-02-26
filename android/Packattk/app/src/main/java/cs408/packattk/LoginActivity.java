@@ -141,8 +141,8 @@ public class LoginActivity extends Activity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -179,22 +179,37 @@ public class LoginActivity extends Activity {
             CharSequence two = "Attempting Login";
             Toast toast = Toast.makeText(context, two, Toast.LENGTH_SHORT);
             toast.show();
+
+
             //Attempt Login
             Client client = new Client(email);
             int check=client.checkLogin(email,password);
-            if(check==1){
-                Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
-                startActivity(intent);
-            }
-            else if(check==2){
-                Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
-                startActivity(intent);
-            }
-            else{
-                mEmailView.setError("Invalid username or password");
-                focusView = mEmailView;
-                focusView.requestFocus();
-            }
+
+            AsyncTask<Void, Void, Integer> loginTask = new AsyncTask<Void, Void, Integer>() {
+                @Override
+                protected Integer doInBackground(Void... params) {
+                    Client client = new Client(email);
+                    return client.checkLogin(email,password);
+                }
+
+                @Override
+                protected void onPostExecute(Integer check) {
+                    if(check==1){
+                        Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
+                        startActivity(intent);
+                    }
+                    else if(check==2){
+                        Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
+                        startActivity(intent);
+                    }
+                    else{
+                        mEmailView.setError("Invalid username or password");
+                        mEmailView.requestFocus();
+                    }
+                }
+            };
+            loginTask.execute();
+
         }
     }
 
