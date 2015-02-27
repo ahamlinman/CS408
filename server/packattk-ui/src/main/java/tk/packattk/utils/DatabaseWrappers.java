@@ -38,7 +38,7 @@ public class DatabaseWrappers
                     p.getLastName()     + "', '" +
                     p.getFirstName()    + "', '" +
                     p.getLocation()     + "', " +
-                    "', ' , 0, " +              // Insert the string ', ' as the packages and 0 for numPackages
+                    "', ' , 0, " +      // Insert the string ', ' as the packages and 0 for numPackages
                     isAdmin             + ", '" +
                     p.getUsername()     + "', '" +
                     p.getPassword()     + "');";
@@ -266,4 +266,8 @@ public class DatabaseWrappers
         }
         return false;
     }
+
+    //TODO: Add getPackages(person p) function
+
+    //TODO: Add getPackagesOlderThan(date) function
 }
