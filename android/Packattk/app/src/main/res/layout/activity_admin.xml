@@ -22,18 +22,18 @@
             android:id="@+id/textView2"
             android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="288dp"
+            android:id="@+id/listView2"
             android:layout_gravity="center_horizontal" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Button"
-            android:id="@+id/button2" />
+            android:id="@+id/button"
+            android:layout_gravity="center_horizontal" />
 
     </RadioGroup>
 </RelativeLayout>

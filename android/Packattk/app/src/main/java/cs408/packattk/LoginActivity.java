@@ -181,10 +181,12 @@ public class LoginActivity extends Activity {
                 protected void onPostExecute(Integer check) {
                     if(check==1){
                         Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
+                        intent.putExtra("user",email);
                         startActivity(intent);
                     }
                     else if(check==2){
                         Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
+                        intent.putExtra("user",email);
                         startActivity(intent);
                     }
                     else{
