@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +32,7 @@ public class Client {
 
     private final static String LOGIN = "LOGIN";
     private final static String ADDUSER = "ADDUSER";
-
+    private final static String GETPACKAGES = "GETPACKAGES";
     public Client() {
     }
 
@@ -152,6 +154,35 @@ public class Client {
             return 2;
 
         return 0;
+    }
+
+    /**
+     * Gets the list of packages belonging to a particular user and parses them into a list
+     * @param username
+     * @return
+     */
+    public ArrayList getPackages(String username){
+        String command = GETPACKAGES + " " + username;
+        ArrayList<String> packageList = new ArrayList<String>();
+        String response = executeServerCommand(command);
+
+        Log.v(TAG,"List Response" + response);
+
+        //Parse the response and put the items in the packageList
+        if(response.trim()!="EMPTY"){
+            char c;
+            int i=0;
+            while((c=response.charAt(i))!='*'){
+                String packageInfo="";
+                while((c=response.charAt(i))!='\n'){
+                    packageInfo+=c;
+                    i++;
+                }
+                packageList.add(packageInfo);
+                i++;
+            }
+        }
+        return packageList;
     }
 
 }
