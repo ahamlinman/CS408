@@ -112,8 +112,8 @@ public class Client {
      * @param password
      * @return 0 on success and 1 on failure
      */
-    public int addUser(String username, String password){
-        String command = ADDUSER + " " + username + " " + password + "\n";
+    public int addUser(String username, String password, String name){
+        String command = ADDUSER + " " + username + " " + password + " " + name + "\n";
         String response = executeServerCommand(command);
 
         if(response.trim().equals("FAILURE"))
