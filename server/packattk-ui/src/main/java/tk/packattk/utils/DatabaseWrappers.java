@@ -1,5 +1,6 @@
 package tk.packattk.utils;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by Evan on 2/15/2015.
@@ -38,7 +39,7 @@ public class DatabaseWrappers
                     p.getLastName()     + "', '" +
                     p.getFirstName()    + "', '" +
                     p.getLocation()     + "', " +
-                    "', ' , 0, " +      // Insert the string ', ' as the packages and 0 for numPackages
+                    "',' , 0, " +      // Insert the string ',' as the packages and 0 for numPackages
                     isAdmin             + ", '" +
                     p.getUsername()     + "', '" +
                     p.getPassword()     + "');";
@@ -61,7 +62,8 @@ public class DatabaseWrappers
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
                     "pid='" + pid + "';" );
-            if (!result.next()){
+            if (!result.next())
+            {
                 stmt.close();
                 conn.close();
                 return null;
@@ -115,7 +117,7 @@ public class DatabaseWrappers
             }
             String packages = result.getString("packages");
             int numPackages = result.getInt("numPackages");
-            packages += p.getTracking() + ", "; //Add the tracking number to the list of packages
+            packages += p.getTracking() + ","; //Add the tracking number to the list of packages
             numPackages += 1; //Increase the number of packages by one
             sql = "UPDATE people SET " +
                     "packages='" + packages + "', " +
@@ -140,7 +142,8 @@ public class DatabaseWrappers
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
                     "tracking='" + trackingNum + "';");
-            if (!result.next()){
+            if (!result.next())
+            {
                 stmt.close();
                 conn.close();
                 return null;
@@ -165,7 +168,8 @@ public class DatabaseWrappers
                     result2.getInt("isAdmin") == 1,  //isAdmin is stored as an int in the database. So it must be converted to boolean
                     result2.getString("username"),
                     result2.getString("password"));
-            if (!result3.next()){
+            if (!result3.next())
+            {
                 stmt.close();
                 conn.close();
                 return null;
@@ -214,7 +218,7 @@ public class DatabaseWrappers
             }
             String packages = result.getString("packages");
             int numPackages = result.getInt("numPackages");
-            packages = packages.replace(p.getTracking() + ", ", ""); //Delete the tracking number to the list of packages
+            packages = packages.replace(p.getTracking() + ",", ""); //Delete the tracking number to the list of packages
             numPackages -= 1; //Decrease the number of packages by one
             String sql = "UPDATE people SET " +
                     "packages='" + packages + "', " +
@@ -267,7 +271,62 @@ public class DatabaseWrappers
         return false;
     }
 
-    //TODO: Add getPackages(person p) function
+    public static ArrayList<Package> getPackages(Person p)
+    {   //Gets the packages for the person provided
+        ArrayList<Package> packages = new ArrayList<Package>();
+        try
+        {
+            Connection conn = SQLiteConnection.dbConnector();
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
+                    "pid='" + p.getPid() + "';" );
+            if (!result.next())
+            {
+                stmt.close();
+                conn.close();
+                return null;
+            }
+            String[] packageArray = result.getString("packages").split(",");//Packages should be in the form of ",####,####,####,"
+            stmt.close();
+            conn.close();
+            for(String trackingNum : packageArray)
+                packages.add(getPackageInfo(trackingNum));
+            return packages;
+        } catch (Exception e)
+        {
+            //Print error somewhere?
+        }
+        return null;
+    }
 
+    public ArrayList<Person> getPeople()
+    {   //Gets the information for all of the people
+        ArrayList<Person> people = new ArrayList<Person>();
+        try
+        {
+            Connection conn = SQLiteConnection.dbConnector();
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM people;");
+            while(result.next()) {
+                Person p = new Person(
+                        result.getString("pid"),
+                        result.getString("lastName"),
+                        result.getString("firstName"),
+                        result.getString("location"),
+                        result.getInt("numPackages"),
+                        result.getInt("isAdmin") == 1,  //isAdmin is stored as an int in the database. So it must be converted to boolean
+                        result.getString("username"),
+                        result.getString("password"));
+                people.add(p);
+            }
+            stmt.close();
+            conn.close();
+            return people;
+        } catch (Exception e)
+        {
+            //Print error somewhere?
+        }
+        return null;
+    }
     //TODO: Add getPackagesOlderThan(date) function
 }
