@@ -26,6 +26,15 @@ public class Package {
         this.admin = admin;
         //TODO: Add check-in time
     }
+    
+    public Package(Package p) {
+    	this.name = p.name;
+    	this.tracking = p.tracking;
+    	this.location = p.location;
+    	this.destination = p.destination;
+    	this.student = new Person(p.student);
+    	this.admin = new Person(p.admin);
+    }
 
     /*
      * Determines if the package is where it should be.
