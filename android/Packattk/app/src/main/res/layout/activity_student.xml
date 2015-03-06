@@ -13,6 +13,7 @@
         android:id="@+id/header" />
 
     <ListView
+        android:layout_marginTop="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
@@ -28,5 +29,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="224dp" />
+
+    <Button
+        android:layout_marginTop="50dp"
+        android:id="@+id/refresh_button"
+        android:style="?android:textAppearanceSmall"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:layout_gravity="center_horizontal" />
 
 </RelativeLayout>
