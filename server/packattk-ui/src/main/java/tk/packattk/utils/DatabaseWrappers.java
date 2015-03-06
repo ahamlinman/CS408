@@ -338,7 +338,7 @@ public class DatabaseWrappers
             Connection conn = SQLiteConnection.dbConnector();
             Statement stmt = conn.createStatement();
             ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
-                    "time >=" + time + ";" );
+                    "time >=" + time + " ORDER BY time;" );
             while(result.next())
                 packageList.add(result.getString("tracking"));
             stmt.close();
