@@ -328,5 +328,28 @@ public class DatabaseWrappers
         }
         return null;
     }
-    //TODO: Add getPackagesOlderThan(date) function
+
+    public static ArrayList<Package> getOldPackages(long time)
+    {   //Gets the packages older than the time given
+        ArrayList<Package> packages = new ArrayList<Package>();
+        ArrayList<String> packageList = new ArrayList<String>();
+        try
+        {
+            Connection conn = SQLiteConnection.dbConnector();
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
+                    "time >=" + time + ";" );
+            while(result.next())
+                packageList.add(result.getString("tracking"));
+            stmt.close();
+            conn.close();
+            for(String trackingNum : packageList)
+                packages.add(getPackageInfo(trackingNum));
+            return packages;
+        } catch (Exception e)
+        {
+            //Print error somewhere?
+        }
+        return null;
+    }
 }
