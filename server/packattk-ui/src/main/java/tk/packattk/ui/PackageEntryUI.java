@@ -174,8 +174,9 @@ public class PackageEntryUI extends UI {
 
 				for(Package p : packages) {
 					p.setStudent(owner);
-					p.setAdmin(owner);
 					p.setDestination(owner.getLocation());
+					p.setAdmin(currentUser);
+					p.setLocation(currentUser.getLocation());
 					if(!DatabaseWrappers.addPackage(p)) {
 						Notification.show("Error adding packages");
 						return;
