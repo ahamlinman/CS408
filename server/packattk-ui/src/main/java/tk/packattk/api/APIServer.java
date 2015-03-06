@@ -121,6 +121,9 @@ public class APIServer {
         }
         String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
+        Person administrator = DatabaseWrappers.getPerson(admin);
+        if(administrator== null || !administrator.getIsAdmin())
+            return "FAILURE";
         String packageList =null;
         try{
             ArrayList<Person> people = DatabaseWrappers.getPeople();
