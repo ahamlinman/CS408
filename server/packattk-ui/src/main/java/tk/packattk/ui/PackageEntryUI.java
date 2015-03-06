@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import tk.packattk.components.AdminPersonPanel;
 import tk.packattk.components.AdminScanPanel;
 import tk.packattk.components.listeners.PackageSelectListener;
+import tk.packattk.utils.DatabaseWrappers;
 import tk.packattk.utils.Package;
 import tk.packattk.utils.Person;
 
@@ -18,6 +19,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractLayout;
@@ -43,9 +45,17 @@ public class PackageEntryUI extends UI {
 	private static final long serialVersionUID = 1L;
 
 	private static FieldGroup currentBinder = null;
+	private Person currentUser = null;
 
 	@Override
 	protected void init(VaadinRequest request) {
+		currentUser = (Person) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("user");
+
+		if(currentUser == null) {
+			getUI().getPage().setLocation("/");
+			return;
+		}
+
 		setContent(buildInterface());
 	}
 
@@ -63,6 +73,7 @@ public class PackageEntryUI extends UI {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
+				VaadinService.getCurrentRequest().getWrappedSession().invalidate();
 				getPage().setLocation("/");
 			}
 		});
@@ -163,9 +174,13 @@ public class PackageEntryUI extends UI {
 
 				for(Package p : packages) {
 					p.setStudent(owner);
+					p.setAdmin(owner);
+					p.setDestination(owner.getLocation());
+					if(!DatabaseWrappers.addPackage(p)) {
+						Notification.show("Error adding packages");
+						return;
+					}
 				}
-
-				// TODO: Actually submit packages
 
 				scanPanel.clear();
 				personPanel.clear();

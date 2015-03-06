@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.LoginWindow;
 import tk.packattk.utils.DatabaseWrappers;
+import tk.packattk.utils.Person;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -13,7 +14,9 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
@@ -88,6 +91,9 @@ public class LoginUI extends UI {
 
 				try {
 					if(DatabaseWrappers.checkLogin(username, password)) {
+						Person currentUser = DatabaseWrappers.getPersonByUsername(username);
+						VaadinService.getCurrentRequest().getWrappedSession().invalidate();
+						VaadinService.getCurrentRequest().getWrappedSession().setAttribute("user", currentUser);
 						getUI().getPage().setLocation("/packages/view");
 					} else {
 						Notification.show("Incorrect username/password. Please try again.");

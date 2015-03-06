@@ -4,16 +4,30 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class StudentActivity extends ActionBarActivity {
+    private Client client = new Client();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
+
+        Button refreshButton= (Button) findViewById(R.id.refresh_button);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptRefresh();
+            }
+        });
     }
 
+    public void attemptRefresh() {
+        client.getPackages("username");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
