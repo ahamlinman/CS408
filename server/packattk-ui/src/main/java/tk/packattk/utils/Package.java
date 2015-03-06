@@ -12,19 +12,29 @@ public class Package {
     private String destination;		// desired destination of the package
     private Person student;			// student the package is addressed to
     private Person admin;			// admin who most recently scanned the package
-    //TODO: Add check-in time
+    private long time;              // the date/time the package was checked in.
 
     /*
      * Constructor for the Package class.
      */
-    public Package(String name, String tracking, String location, String destination, Person student, Person admin) {
+    public Package(String name, String tracking, String location, String destination, Person student, Person admin, long time) {
         this.name = name;
         this.tracking = tracking;
         this.location = location;
         this.destination = destination;
         this.student = student;
         this.admin = admin;
-        //TODO: Add check-in time
+        this.time = time;
+    }
+    
+    public Package(Package p) {
+    	this.name = p.name;
+    	this.tracking = p.tracking;
+    	this.location = p.location;
+    	this.destination = p.destination;
+    	this.student = new Person(p.student);
+    	this.admin = new Person(p.admin);
+        this.time = p.time;
     }
 
     /*
@@ -38,7 +48,6 @@ public class Package {
 
     /*
      * Getters and setters
-     * TODO: Add check-in time
      */
     public void setName(String name) {
         this.name = name;
@@ -64,6 +73,10 @@ public class Package {
         this.admin = admin;
     }
 
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public String getName() {
         return name;
     }
@@ -86,6 +99,10 @@ public class Package {
 
     public Person getAdmin() {
         return admin;
+    }
+
+    public long getTime() {
+        return time;
     }
 }
 

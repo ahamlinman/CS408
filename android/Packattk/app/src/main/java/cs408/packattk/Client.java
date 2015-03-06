@@ -12,14 +12,8 @@ import org.apache.http.params.HttpConnectionParams;
 import java.net.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by Cris on 2/12/2015.
@@ -30,6 +24,8 @@ public class Client {
 
     private final static String LOGIN = "LOGIN";
     private final static String ADDUSER = "ADDUSER";
+    private final static String GETPACKAGES = "GETPACKAGES";
+    private final static String ADDPACKAGE = "ADDPACKAGE";
 
     public Client() {
     }
@@ -116,8 +112,8 @@ public class Client {
      * @param password
      * @return 0 on success and 1 on failure
      */
-    public int addUser(String username, String password){
-        String command = ADDUSER + " " + username + " " + password + "\n";
+    public int addUser(String username, String password, String name){
+        String command = ADDUSER + " " + username + " " + password + " " + name + "\n";
         String response = executeServerCommand(command);
 
         if(response.trim().equals("FAILURE"))
@@ -151,6 +147,50 @@ public class Client {
         else if(response.trim().equals("SUCCESSADMIN"))
             return 2;
 
+        return 0;
+    }
+
+    /**
+     * Gets the list of packages belonging to a particular user and parses them into a list
+     * @param username
+     * @return
+     */
+    public ArrayList getPackages(String username){
+        String command = GETPACKAGES + " " + username;
+        ArrayList<String> packageList = new ArrayList<String>();
+        String response = executeServerCommand(command);
+
+        Log.v(TAG,"List Response" + response);
+
+        //Parse the response and put the items in the packageList
+        if(response.trim()!="EMPTY"){
+            char c;
+            int i=0;
+            while((c=response.charAt(i))!='*'){
+                String packageInfo="";
+                while((c=response.charAt(i))!='\n'){
+                    packageInfo+=c;
+                    i++;
+                }
+                packageList.add(packageInfo);
+                i++;
+            }
+        }
+        return packageList;
+    }
+
+    /**
+     * Add a package into the system.  Return 1 upon success, 0 on failure
+     * @param username
+     * @param packageId
+     * @param location
+     * @return
+     */
+     public int addPackage(String username, String packageId, String location){
+        String command = ADDPACKAGE + " " + username + " " + packageId + " " + location;
+        String response=executeServerCommand(command);
+        if(response.trim()=="SUCCESS")
+            return 1;
         return 0;
     }
 

@@ -68,8 +68,8 @@ public class SQLiteConnection {
 					"location       varchar(255), " +
 					"destination    varchar(255), " +
 					"student        varchar(255), " +
-					"admin          varchar(255));";
-			//TODO: Add check-in time
+					"admin          varchar(255), " +
+                    "time           integer);";
 			stmt.executeUpdate(sql);
 			stmt.close();
 		} catch (SQLException e) {
