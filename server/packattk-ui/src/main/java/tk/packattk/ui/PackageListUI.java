@@ -1,28 +1,30 @@
 package tk.packattk.ui;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 
 import tk.packattk.components.PackageDetailDisplay;
+import tk.packattk.utils.DatabaseWrappers;
 import tk.packattk.utils.Package;
+import tk.packattk.utils.Person;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -34,9 +36,17 @@ import com.vaadin.ui.VerticalSplitPanel;
 public class PackageListUI extends UI {
 
 	private static final long serialVersionUID = 1L;
+	private Person currentUser = null;
 
 	@Override
 	protected void init(VaadinRequest request) {
+		currentUser = (Person) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("user");
+
+		if(currentUser == null) {
+			getUI().getPage().setLocation("/");
+			return;
+		}
+
 		setContent(buildInterface());
 	}
 
@@ -54,6 +64,7 @@ public class PackageListUI extends UI {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
+				VaadinService.getCurrentRequest().getWrappedSession().invalidate();
 				getPage().setLocation("/");
 			}
 		});
@@ -65,15 +76,17 @@ public class PackageListUI extends UI {
 		final PackageDetailDisplay detailDisplay = new PackageDetailDisplay();
 
 		final Table packageTable = new Table("Current Packages");
-		packageTable.addContainerProperty("Tracking Number", String.class, "");
-		packageTable.addContainerProperty("Scanned At", Date.class, null);
-		packageTable.addContainerProperty("Location", String.class, "");
+		BeanItemContainer<Package> packageContainer = new BeanItemContainer<Package>(Package.class);
+		List<Package> packages = DatabaseWrappers.getPackages(currentUser);
+		if (packages != null) {
+			packageContainer.addAll(packages);
+		} else {
+			packageTable.setVisible(false);
+		}
 
-		final tk.packattk.utils.Package p = new Package("", "1Z555444333222111", "Shreve", "Shreve", null, null);
-		Item testRow = packageTable.getItem(packageTable.addItem());
-		testRow.getItemProperty("Tracking Number").setValue(p.getTracking());
-		testRow.getItemProperty("Scanned At").setValue(Calendar.getInstance().getTime());
-		testRow.getItemProperty("Location").setValue(p.getLocation());
+		packageTable.setContainerDataSource(packageContainer);
+		packageTable.setVisibleColumns("tracking", "location", "name");
+		packageTable.setColumnHeaders("Tracking #", "Location", "Name");
 
 		packageTable.setSizeFull();
 		packageTable.setSelectable(true);
@@ -83,8 +96,8 @@ public class PackageListUI extends UI {
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				Item i = packageTable.getItem(packageTable.getValue());
-				if(i != null) {
+				Package p = (Package) packageTable.getValue();
+				if(p != null) {
 					detailDisplay.displayPackage(p);
 				} else {
 					detailDisplay.clearDisplay();

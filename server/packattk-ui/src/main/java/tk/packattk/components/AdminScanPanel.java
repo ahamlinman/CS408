@@ -72,7 +72,7 @@ public class AdminScanPanel extends CustomComponent {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				// TODO: Change default package location to that of admin
-				tk.packattk.utils.Package newPackage = new tk.packattk.utils.Package("", number_scan_field.getValue(), "Shreve", "", null, null);
+				tk.packattk.utils.Package newPackage = new tk.packattk.utils.Package("", number_scan_field.getValue(), "Shreve", "", null, null, System.currentTimeMillis());
 				packageContainer.addBean(newPackage);
 				number_scan_field.setValue("");
 				number_scan_field.focus();
@@ -84,7 +84,7 @@ public class AdminScanPanel extends CustomComponent {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				String genId = "PTK-" + UUID.randomUUID().toString().substring(24).toUpperCase();
-				tk.packattk.utils.Package newPackage = new tk.packattk.utils.Package("", genId, "Shreve", "", null, null);
+				tk.packattk.utils.Package newPackage = new tk.packattk.utils.Package("", genId, "Shreve", "", null, null, System.currentTimeMillis());
 				packageContainer.addBean(newPackage);
 				number_scan_field.setValue("");
 				number_scan_field.focus();
