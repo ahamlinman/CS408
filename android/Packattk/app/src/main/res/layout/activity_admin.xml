@@ -24,16 +24,27 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="288dp"
+            android:layout_height="188dp"
             android:id="@+id/listView2"
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:id="@+id/refresh_button"
+            android:style="?android:textAppearanceSmall"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
+            android:text="Refresh"
             android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/scan_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Scan Package"
+            android:textStyle="bold" />
 
     </RadioGroup>
 </RelativeLayout>
