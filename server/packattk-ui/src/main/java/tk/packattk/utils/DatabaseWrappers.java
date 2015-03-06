@@ -98,13 +98,13 @@ public class DatabaseWrappers
                     "name, tracking, location" +
                     "destination, student, admin" +
                     "VALUES('" +
-                    p.getName()         + "', '" +
-                    p.getTracking()     + "', '" +
-                    p.getLocation()     + "', '" +
-                    p.getDestination()  + "', '" +
+                    p.getName()             + "', '" +
+                    p.getTracking()         + "', '" +
+                    p.getLocation()         + "', '" +
+                    p.getDestination()      + "', '" +
                     p.getStudent().getPid() + "', '" +
-                    p.getAdmin().getPid()   + "';";
-            //TODO: Add check-in time
+                    p.getAdmin().getPid()   + "', '" +
+                    p.getTime()             + "';";
             stmt.executeUpdate(sql);
             //Next, look up the person and add the package to their list.
             ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
@@ -189,8 +189,8 @@ public class DatabaseWrappers
                     result.getString("location"),
                     result.getString("destination"),
                     student,
-                    admin);
-            //TODO: Add check-in time
+                    admin,
+                    result.getInt("time"));
             stmt.close();
             conn.close();
             return p;
@@ -258,8 +258,8 @@ public class DatabaseWrappers
                     "destination='"  + p.getDestination()        + "', " +
                     "student='"      + p.getStudent().getPid()   + "', " +
                     "admin='"        + p.getAdmin().getPid()     + "', " +
+                    "time='"         + p.getTime()               + "', " +
                     "WHERE tracking='" + p.getTracking()         + "';";
-            //TODO: Add check-in time
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
