@@ -1,6 +1,7 @@
 package cs408.packattk;
 
 
+import android.app.AlertDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -55,7 +56,15 @@ public class AdminActivity extends ActionBarActivity {
     }
 
     public void attemptScanPackage() {
-        client.addPackage("username", "packageid", "location");
+        String username = "";
+        String packageid = "";
+        String location = "";
+
+        //Create a dialog for the user to enter the package information into the system
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+        client.addPackage(username, packageid, location);
     }
 
     @Override

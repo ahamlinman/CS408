@@ -9,5 +9,8 @@
     <string name="title_activity_student">Packages</string>
     <string name="refresh">Refresh</string>
     <string name="scan_package">Scan Package</string>
+    <string name="user_email">User Email</string>
+    <string name="packageid">Package ID</string>
+    <string name="location">Location</string>
 
 </resources>
