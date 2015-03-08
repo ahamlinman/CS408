@@ -1,6 +1,5 @@
 package cs408.packattk;
 
-import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,7 +15,6 @@ public class StudentActivity extends ActionBarActivity {
 
     private ListView listView;
     private Client client = new Client();
-    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +32,14 @@ public class StudentActivity extends ActionBarActivity {
 
         //Populate the list of packages
         List<String> packageList = client.getPackages(Data.username);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.activity_list_item,packageList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.activity_list_item,packageList);
         listView.setAdapter(adapter);
     }
 
     public void attemptRefresh() {
         List<String> packageList = client.getPackages(Data.username);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.activity_list_item,packageList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.activity_list_item,packageList);
         listView.setAdapter(adapter);
     }
 

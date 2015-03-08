@@ -30,7 +30,6 @@
 
         <Button
             android:id="@+id/refresh_button"
-            android:style="?android:textAppearanceSmall"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
