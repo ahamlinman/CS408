@@ -62,7 +62,7 @@ public class AdminActivity extends ActionBarActivity {
 
         //Create a dialog for the user to enter the package information into the system
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+        builder.setView(R.layout.dialog_package_entry);
 
         client.addPackage(username, packageid, location);
     }
