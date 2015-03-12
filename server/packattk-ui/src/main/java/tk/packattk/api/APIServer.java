@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import tk.packattk.utils.DatabaseWrappers;
+import tk.packattk.utils.Package;
+import tk.packattk.utils.Person;
 
 /**
  * Created by Cris on 2/12/2015.
@@ -27,6 +29,42 @@ public class APIServer {
 				return "FAILURE";
 			}
 		}
+        if(command.startsWith("ADDUSER")) {
+            if(addNewUser(command)) {
+                return "SUCCESSUSER";
+            } else {
+                return "FAILURE";
+            }
+        }
+        if (command.startsWith("GETPACKAGES")) {
+            if(getPackages(command)!= null) {
+                return getPackages(command);
+            } else {
+                return "FAILURE";
+            }
+        }
+        if (command.startsWith("ListAllPackages")) {
+            if(!(listAllPackages(command)).equals("FAILURE")) {
+                return listAllPackages(command);
+            } else {
+                return "FAILURE";
+            }
+        }
+        if (command.startsWith("ListOldPackages")) {
+            if(!(ListOldPackages(command)).equals("FAILURE")) {
+                return listAllPackages(command);
+            } else {
+                return "FAILURE";
+            }
+        }
+        if (command.startsWith("REMOVEPACKAGE")) {
+            if(removeAPackage(command)) {
+                return "SUCCESSUSER";
+            } else {
+                return "FAILURE";
+            }
+        }
+
 
 		return "INVALID";
 	}
@@ -83,7 +121,7 @@ public class APIServer {
        System.out.println("ID: " + idnum);
        Person newuser = new Person(idnum, lastName,firstName,hall,0, isadmin);
        try {
-          return DatabaseWrappers.addUser(newUser);
+           return DatabaseWrappers.addUser(newUser);
        } catch (SQLException e) {
            e.printStackTrace();
            return false;
@@ -93,9 +131,10 @@ public class APIServer {
     /*GETPACKAGES pid*/
    public String getPackages( String msg ){
        if(msg.length() == 0 ){
-           return "FAILURE";
+           return false;
        }
 
+       String credentials = msg.substring(msg.indexOf(" ") + 1);
        String userid = msg.substring(credentials.indexOf(" ")+1);
        System.out.println("Userid: " + userid);
        try{
@@ -104,7 +143,7 @@ public class APIServer {
            for(Package p: packages){
                packageList = packageList+ p.getName()+"\t"+
                        p.getTracking()+"\t"+ p.getTime()+"\t"+
-                       p.getLocation+"\n";
+                       p.getLocation()+"\n";
            }
            packageList += "*"; //Indicate the end of the packages list
 
@@ -117,8 +156,10 @@ public class APIServer {
     /*ListAllPackages adminid*/
     public String listAllPackages( String msg ){
         if(msg.length() == 0 ){
-            return "FAILURE";
+            return false;
         }
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
         Person administrator = DatabaseWrappers.getPerson(admin);
@@ -132,7 +173,7 @@ public class APIServer {
                 for(Package p: packages){
                     packageList = packageList+ p.getName()+"\t"+
                             p.getTracking()+"\t"+ p.getTime()+"\t"+
-                            p.getLocation+"\n";
+                            p.getLocation()+"\n";
                 }
                 packageList += "#"; //Indicate the end of the packages list
             }
@@ -146,16 +187,18 @@ public class APIServer {
     /*ListOldPackages time*/
     public String listOldPackages( String msg ){
         if(msg.length() == 0 ){
-            return "FAILURE";
+            return false;
         }
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         long time = Long.parseLong(msg.substring(credentials.indexOf(" ")+1));
         String packageList =null;
         try{
-            getArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
+            ArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
             for(Package p: packages){
                 packageList = packageList+ p.getName()+"\t"+
                         p.getTracking()+"\t"+ p.getTime()+"\t"+
-                        p.getLocation+"\n";
+                        p.getLocation()+"\n";
             }
             packageList += "#"; //Indicate the end of the packages list
             return packageList;
@@ -170,7 +213,7 @@ public class APIServer {
             return false;
         }
 
-        String credentials = msg.substring(credentials.indexOf(" ")+1);
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         String packageId = credentials.substring(0,credentials.indexOf(" "));
         System.out.println("packageID: " + packageId);
 
@@ -195,17 +238,14 @@ public class APIServer {
         long date = Long.parseLong(sdate);
         System.out.println("Date: " + date);
 
-        String location = credentials.substring(credentials.indexOf("\t")+1,credentials.indexOf("\n");
+        String location = credentials.substring(credentials.indexOf("\t")+1,credentials.indexOf("\n"));
         System.out.println("Location: " + location);
-        try{
-            Person user = DatabaseWrappers.getPerson(ID);
-            Person admin = DatabaseWrappers.getPerson(AdminID);
-            Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
-            return DatabaseWrappers.addPackage(p);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+
+        Person user = DatabaseWrappers.getPerson(ID);
+        Person admin = DatabaseWrappers.getPerson(AdminID);
+        Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
+
+        return DatabaseWrappers.addPackage(p);
     }
 
     /*REMOVEPACKAGE trackingNum*/
@@ -213,18 +253,15 @@ public class APIServer {
         if(msg.length() == 0 ){
             return false;
         }
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         String trackingNumber = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("TrackingNumber: " + trackingNumber);
-        try{
-            Package p = DatabaseWrappers.getPackageInfo(trackingNumber);
-            if(p!= null){
-                return DatabaseWrappers.removePackage(p);
-            
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Package p = DatabaseWrappers.getPackageInfo(trackingNumber);
+		if(p!= null)
+		    return DatabaseWrappers.removePackage(p);
+		else
+			return false;
     }
     /* TODO: Update package,
     *need to specify which variable need to be modified*/
