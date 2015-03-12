@@ -52,7 +52,7 @@ public class APIServer {
         }
         if (command.startsWith("ListOldPackages")) {
             if(!(listOldPackages(command)).equals("FAILURE")) {
-                return listAllPackages(command);
+                return listOldPackages(command);
             } else {
                 return "FAILURE";
             }
