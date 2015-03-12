@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import tk.packattk.utils.DatabaseWrappers;
+import tk.packattk.utils.Package;
+import tk.packattk.utils.Person;
 
 /**
  * Created by Cris on 2/12/2015.
@@ -104,7 +106,7 @@ public class APIServer {
            for(Package p: packages){
                packageList = packageList+ p.getName()+"\t"+
                        p.getTracking()+"\t"+ p.getTime()+"\t"+
-                       p.getLocation+"\n";
+                       p.getLocation()+"\n";
            }
            packageList += "*"; //Indicate the end of the packages list
 
@@ -132,7 +134,7 @@ public class APIServer {
                 for(Package p: packages){
                     packageList = packageList+ p.getName()+"\t"+
                             p.getTracking()+"\t"+ p.getTime()+"\t"+
-                            p.getLocation+"\n";
+                            p.getLocation()+"\n";
                 }
                 packageList += "#"; //Indicate the end of the packages list
             }
@@ -151,11 +153,11 @@ public class APIServer {
         long time = Long.parseLong(msg.substring(credentials.indexOf(" ")+1));
         String packageList =null;
         try{
-            getArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
+            ArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
             for(Package p: packages){
                 packageList = packageList+ p.getName()+"\t"+
                         p.getTracking()+"\t"+ p.getTime()+"\t"+
-                        p.getLocation+"\n";
+                        p.getLocation()+"\n";
             }
             packageList += "#"; //Indicate the end of the packages list
             return packageList;
@@ -195,18 +197,14 @@ public class APIServer {
         long date = Long.parseLong(sdate);
         System.out.println("Date: " + date);
 
-        String location = credentials.substring(credentials.indexOf("\t")+1,credentials.indexOf("\n");
+        String location = credentials.substring(credentials.indexOf("\t")+1,credentials.indexOf("\n"));
         System.out.println("Location: " + location);
-        try{
-            Person user = DatabaseWrappers.getPerson(ID);
-            Person admin = DatabaseWrappers.getPerson(AdminID);
-            Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
 
-            return DatabaseWrappers.addPackage(p);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Person user = DatabaseWrappers.getPerson(ID);
+        Person admin = DatabaseWrappers.getPerson(AdminID);
+        Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
+
+        return DatabaseWrappers.addPackage(p);
     }
 
     /*REMOVEPACKAGE trackingNum*/
