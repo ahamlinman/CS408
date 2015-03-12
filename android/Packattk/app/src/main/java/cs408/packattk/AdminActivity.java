@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.List;
@@ -63,6 +64,12 @@ public class AdminActivity extends ActionBarActivity {
         //Create a dialog for the user to enter the package information into the system
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.dialog_package_entry);
+
+        EditText usernameBox = (EditText)findViewById(R.id.user_email);
+        EditText packageIdBox = (EditText)findViewById(R.id.packageId);
+        EditText locationBox = (EditText)findViewById(R.id.location);
+
+        
 
 
         client.addPackage(username, packageid, location);
