@@ -64,6 +64,7 @@ public class AdminActivity extends ActionBarActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.dialog_package_entry);
 
+
         client.addPackage(username, packageid, location);
     }
 
