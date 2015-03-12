@@ -98,6 +98,7 @@ public class APIServer {
            return false;
        }
 
+       String credentials = msg.substring(msg.indexOf(" ") + 1);
        String userid = msg.substring(credentials.indexOf(" ")+1);
        System.out.println("Userid: " + userid);
        try{
@@ -121,6 +122,8 @@ public class APIServer {
         if(msg.length() == 0 ){
             return false;
         }
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
         Person administrator = DatabaseWrappers.getPerson(admin);
@@ -150,6 +153,8 @@ public class APIServer {
         if(msg.length() == 0 ){
             return false;
         }
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         long time = Long.parseLong(msg.substring(credentials.indexOf(" ")+1));
         String packageList =null;
         try{
@@ -172,7 +177,7 @@ public class APIServer {
             return false;
         }
 
-        String credentials = msg.substring(credentials.indexOf(" ")+1);
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         String packageId = credentials.substring(0,credentials.indexOf(" "));
         System.out.println("packageID: " + packageId);
 
@@ -212,16 +217,15 @@ public class APIServer {
         if(msg.length() == 0 ){
             return false;
         }
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
         String trackingNumber = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("TrackingNumber: " + trackingNumber);
-        try{
-            Package p = DatabaseWrappers.getPackageInfo(trackingNumber);
-            if(p!= null)
-                return DatabaseWrappers.removePackage(p);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Package p = DatabaseWrappers.getPackageInfo(trackingNumber);
+		if(p!= null)
+		    return DatabaseWrappers.removePackage(p);
+		else
+			return false;
     }
     /* TODO: Update package,
     *need to specify which variable need to be modified*/
