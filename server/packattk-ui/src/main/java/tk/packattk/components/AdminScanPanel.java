@@ -71,7 +71,6 @@ public class AdminScanPanel extends CustomComponent {
 		add_button.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				// TODO: Change default package location to that of admin
 				tk.packattk.utils.Package newPackage = new tk.packattk.utils.Package("", number_scan_field.getValue(), "Shreve", "", null, null, System.currentTimeMillis());
 				packageContainer.addBean(newPackage);
 				number_scan_field.setValue("");

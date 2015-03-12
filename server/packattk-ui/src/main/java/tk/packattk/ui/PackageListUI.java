@@ -59,6 +59,16 @@ public class PackageListUI extends UI {
 		MenuItem mainItem = mainMenu.addItem("Packattk", null);
 		mainItem.addItem("About", null);
 
+		if(currentUser.getIsAdmin()) {
+			mainMenu.addItem("Administration", new Command() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public void menuSelected(MenuItem selectedItem) {
+					getPage().setLocation("/packages/admin");
+				}
+			});
+		}
+
 		mainMenu.addItem("Log Out", new Command() {
 			private static final long serialVersionUID = 1L;
 
