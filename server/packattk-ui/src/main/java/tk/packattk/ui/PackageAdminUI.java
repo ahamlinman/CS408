@@ -1,6 +1,7 @@
 package tk.packattk.ui;
 
 import java.util.Calendar;
+import java.util.Collection;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -40,7 +41,7 @@ public class PackageAdminUI extends UI {
 	protected void init(VaadinRequest request) {
 		currentUser = (Person) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("user");
 
-		if(currentUser == null) {
+		if(currentUser == null || !currentUser.getIsAdmin()) {
 			getUI().getPage().setLocation("/");
 			return;
 		}
@@ -118,12 +119,21 @@ public class PackageAdminUI extends UI {
 				} else {
 					BeanItemContainer<Package> personPackages =
 							new BeanItemContainer<Package>(Package.class);
-					personPackages.addAll(DatabaseWrappers.getPackages(selectedPerson));
-					packageTable.setContainerDataSource(personPackages);
-					packageTable.setVisibleColumns("tracking", "location", "name");
-					packageTable.setColumnHeaders("Tracking #", "Location", "Name");
-					packageTable.setCaption("Packages for " + selectedPerson.getFirstName()
-							+ " " + selectedPerson.getLastName());
+					
+					Collection<Package> pkgs = DatabaseWrappers.getPackages(selectedPerson);
+					
+					if(pkgs != null) {
+						personPackages.addAll(pkgs);
+						packageTable.setContainerDataSource(personPackages);
+						packageTable.setVisibleColumns("tracking", "location", "name");
+						packageTable.setColumnHeaders("Tracking #", "Location", "Name");
+						packageTable.setCaption("Packages for " + selectedPerson.getFirstName()
+								+ " " + selectedPerson.getLastName());
+					} else {
+						packageTable.setContainerDataSource(null);
+						packageTable.setCaption("No packages for " + selectedPerson.getFirstName()
+								+ " " + selectedPerson.getLastName());
+					}
 				}
 			}
 		});
