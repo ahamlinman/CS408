@@ -74,7 +74,7 @@ public class AdminActivity extends ActionBarActivity {
             String location = "";
 
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int id) {
                 username = usernameBox.getText().toString();
                 packageid = packageIdBox.getText().toString();
                 location = locationBox.getText().toString();
@@ -84,7 +84,7 @@ public class AdminActivity extends ActionBarActivity {
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         });
