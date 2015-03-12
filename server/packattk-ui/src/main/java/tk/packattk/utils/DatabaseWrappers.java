@@ -20,7 +20,7 @@ public class DatabaseWrappers
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, username);
         stmt.setString(2, password);
-		ResultSet result = stmt.executeQuery(sql);
+		ResultSet result = stmt.executeQuery();
 		boolean exists = result.next(); //True if the result has a match, false if no match found
 		stmt.close();
 		conn.close();
