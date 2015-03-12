@@ -83,7 +83,7 @@ public class APIServer {
        System.out.println("ID: " + idnum);
        Person newuser = new Person(idnum, lastName,firstName,hall,0, isadmin);
        try {
-           return DatabaseWrappers.addUser(newUser);
+          return DatabaseWrappers.addUser(newUser);
        } catch (SQLException e) {
            e.printStackTrace();
            return false;
@@ -93,7 +93,7 @@ public class APIServer {
     /*GETPACKAGES pid*/
    public String getPackages( String msg ){
        if(msg.length() == 0 ){
-           return false;
+           return "FAILURE";
        }
 
        String userid = msg.substring(credentials.indexOf(" ")+1);
@@ -117,7 +117,7 @@ public class APIServer {
     /*ListAllPackages adminid*/
     public String listAllPackages( String msg ){
         if(msg.length() == 0 ){
-            return false;
+            return "FAILURE";
         }
         String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
@@ -146,7 +146,7 @@ public class APIServer {
     /*ListOldPackages time*/
     public String listOldPackages( String msg ){
         if(msg.length() == 0 ){
-            return false;
+            return "FAILURE";
         }
         long time = Long.parseLong(msg.substring(credentials.indexOf(" ")+1));
         String packageList =null;
@@ -201,7 +201,6 @@ public class APIServer {
             Person user = DatabaseWrappers.getPerson(ID);
             Person admin = DatabaseWrappers.getPerson(AdminID);
             Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
-
             return DatabaseWrappers.addPackage(p);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -218,8 +217,10 @@ public class APIServer {
         System.out.println("TrackingNumber: " + trackingNumber);
         try{
             Package p = DatabaseWrappers.getPackageInfo(trackingNumber);
-            if(p!= null)
+            if(p!= null){
                 return DatabaseWrappers.removePackage(p);
+            
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
