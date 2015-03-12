@@ -13,9 +13,13 @@ public class DatabaseWrappers
 	public static boolean checkLogin(String username, String password) throws SQLException
 	{   //Checks to see if the person logging in is in the database.
 		Connection conn = SQLiteConnection.dbConnector();
-		Statement stmt = conn.createStatement();
-		String sql = "SELECT * FROM people WHERE username='" + username +
-				"' AND password='" + password + "';";
+//		Statement stmt = conn.createStatement();
+//		String sql = "SELECT * FROM people WHERE username='" + username +
+//				"' AND password='" + password + "';";
+        String sql = "SELECT * FROM people WHERE username=? AND password=?';";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, username);
+        stmt.setString(2, password);
 		ResultSet result = stmt.executeQuery(sql);
 		boolean exists = result.next(); //True if the result has a match, false if no match found
 		stmt.close();
@@ -28,22 +32,34 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
+//			Statement stmt = conn.createStatement();
 			int isAdmin = (p.getIsAdmin() ? 1 : 0);
-			String sql = "INSERT INTO people(" +
+//			String sql = "INSERT INTO people(" +
+//					"pid, lastName, firstName," +
+//					"location, packages, numPackages, " +
+//					"isAdmin, username, password)" +
+//					"VALUES('" +
+//					p.getPid()          + "', '" +
+//					p.getLastName()     + "', '" +
+//					p.getFirstName()    + "', '" +
+//					p.getLocation()     + "', " +
+//					"',' , 0, " +      // Insert the string ',' as the packages and 0 for numPackages
+//					isAdmin             + ", '" +
+//					p.getUsername()     + "', '" +
+//					p.getPassword()     + "');";
+            String sql = "INSERT INTO people(" +
 					"pid, lastName, firstName," +
 					"location, packages, numPackages, " +
 					"isAdmin, username, password)" +
-					"VALUES('" +
-					p.getPid()          + "', '" +
-					p.getLastName()     + "', '" +
-					p.getFirstName()    + "', '" +
-					p.getLocation()     + "', " +
-					"',' , 0, " +      // Insert the string ',' as the packages and 0 for numPackages
-					isAdmin             + ", '" +
-					p.getUsername()     + "', '" +
-					p.getPassword()     + "');";
-			stmt.executeUpdate(sql);
+					"VALUES(?,?,?,?,',',0,"+isAdmin+",?,?);";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, p.getPid());
+            stmt.setString(2, p.getLastName());
+            stmt.setString(3, p.getFirstName());
+            stmt.setString(4, p.getLocation());
+            stmt.setString(5, p.getUsername());
+            stmt.setString(6, p.getPassword());
+            stmt.executeUpdate();
 			stmt.close();
 			conn.close();
 			return true;
@@ -59,9 +75,13 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-					"pid='" + pid + "';" );
+//			Statement stmt = conn.createStatement();
+//			ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
+//					"pid='" + pid + "';" );
+            String sql = "SELECT * FROM people WHERE pid=?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, pid);
+            ResultSet result = stmt.executeQuery();
 			if (!result.next())
 			{
 				stmt.close();
@@ -92,9 +112,15 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-					"username='" + username + "';" );
+//			Statement stmt = conn.createStatement();
+//			ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
+//					"username='" + username + "';" );
+
+            String sql = "SELECT * FROM people WHERE username=?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet result = stmt.executeQuery();
+
 			if (!result.next())
 			{
 				stmt.close();
@@ -125,23 +151,40 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			//First, add the package
-			String sql = "INSERT INTO packages(" +
+//			Statement stmt = conn.createStatement();
+//			//First, add the package
+//			String sql = "INSERT INTO packages(" +
+//					"name, tracking, location," +
+//					"destination, student, admin, time)" +
+//					"VALUES ('" +
+//					p.getName()             + "', '" +
+//					p.getTracking()         + "', '" +
+//					p.getLocation()         + "', '" +
+//					p.getDestination()      + "', '" +
+//					p.getStudent().getPid() + "', '" +
+//					p.getAdmin().getPid()   + "', '" +
+//					p.getTime()             + "');";
+            String sql = "INSERT INTO packages(" +
 					"name, tracking, location," +
 					"destination, student, admin, time)" +
-					"VALUES ('" +
-					p.getName()             + "', '" +
-					p.getTracking()         + "', '" +
-					p.getLocation()         + "', '" +
-					p.getDestination()      + "', '" +
-					p.getStudent().getPid() + "', '" +
-					p.getAdmin().getPid()   + "', '" +
-					p.getTime()             + "');";
-			stmt.executeUpdate(sql);
+					"VALUES (?,?,?,?,?,?,'" + p.getTime() + "');";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, p.getName());
+            stmt.setString(2, p.getTracking());
+            stmt.setString(3, p.getLocation());
+            stmt.setString(4, p.getDestination());
+            stmt.setString(5, p.getStudent().getPid());
+            stmt.setString(6, p.getAdmin().getPid());
+
+			stmt.executeUpdate();
 			//Next, look up the person and add the package to their list.
-			ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
-					"pid='" + p.getStudent().getPid() + "';" );
+//			ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
+//					"pid='" + p.getStudent().getPid() + "';" );
+            sql = "SELECT * FROM people WHERE pid=?;";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1,p.getStudent().getPid());
+            ResultSet result = stmt.executeQuery();
+
 			if (!result.next())
 			{
 				stmt.close();
@@ -152,11 +195,19 @@ public class DatabaseWrappers
 			int numPackages = result.getInt("numPackages");
 			packages += p.getTracking() + ","; //Add the tracking number to the list of packages
 			numPackages += 1; //Increase the number of packages by one
-			sql = "UPDATE people SET " +
-					"packages='" + packages + "', " +
-					"numPackages='" + numPackages + "' " +
-					"WHERE pid='" + p.getStudent().getPid() + "';";
-			stmt.executeUpdate(sql);
+//			sql = "UPDATE people SET " +
+//					"packages='" + packages + "', " +
+//					"numPackages='" + numPackages + "' " +
+//					"WHERE pid='" + p.getStudent().getPid() + "';";
+            sql = "UPDATE people SET " +
+					"packages=?', " +
+					"numPackages=? " +
+					"WHERE pid=?;";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, packages);
+            stmt.setInt(2, numPackages);
+            stmt.setString(3, p.getStudent().getPid());
+			stmt.executeUpdate();
 			stmt.close();
 			conn.close();
 			return true;
@@ -172,9 +223,16 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
-					"tracking='" + trackingNum + "';");
+//			Statement stmt = conn.createStatement();
+//			ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
+//					"tracking='" + trackingNum + "';");
+
+            String sql = "SELECT * FROM packages WHERE tracking=?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, trackingNum);
+            ResultSet result = stmt.executeQuery();
+
+
 			if (!result.next())
 			{
 				stmt.close();
@@ -239,10 +297,19 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			//Update the student (remove tracking number, decrement numPackages)
-			ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
-					"pid='" + p.getStudent().getPid() + "';" );
+//			Statement stmt = conn.createStatement();
+//			//Update the student (remove tracking number, decrement numPackages)
+//			ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
+//					"pid='" + p.getStudent().getPid() + "';" );
+
+            String sql = "SELECT * FROM people WHERE pid=?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, p.getStudent().getPid());
+            ResultSet result = stmt.executeQuery();
+
+
+
+
 			if (!result.next())
 			{
 				stmt.close();
@@ -253,47 +320,29 @@ public class DatabaseWrappers
 			int numPackages = result.getInt("numPackages");
 			packages = packages.replace(p.getTracking() + ",", ""); //Delete the tracking number to the list of packages
 			numPackages -= 1; //Decrease the number of packages by one
-			String sql = "UPDATE people SET " +
-					"packages='" + packages + "', " +
-					"numPackages='" + numPackages + "' " +
-					"WHERE pid=" + p.getStudent().getPid() + ";";
-			stmt.executeUpdate(sql);
-			//Delete the package
-			sql = "DELETE FROM packages WHERE tracking='" + p.getTracking() +"';";
-			stmt.executeUpdate(sql);
-			stmt.close();
-			conn.close();
-			return true;
-		} catch (Exception e)
-		{
-			//Print error somewhere?
-		}
-		return false;
-	}
+//			sql = "UPDATE people SET " +
+//					"packages='" + packages + "', " +
+//					"numPackages='" + numPackages + "' " +
+//					"WHERE pid=" + p.getStudent().getPid() + ";";
 
-	public static boolean updatePackage(Package p)
-	{   //Looks up the package's tracking number and modifies the matching package.
-		try
-		{
-			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery( "SELECT * FROM packages WHERE " +
-					"tracking='" + p.getTracking() + "';" );
-			if (!result.next())
-			{
-				stmt.close();
-				conn.close();
-				return false;
-			}
-			String sql = "UPDATE packages SET " +
-					"name='"         + p.getName()               + "', " +
-					"location='"     + p.getLocation()           + "', " +
-					"destination='"  + p.getDestination()        + "', " +
-					"student='"      + p.getStudent().getPid()   + "', " +
-					"admin='"        + p.getAdmin().getPid()     + "', " +
-					"time='"         + p.getTime()               + "', " +
-					"WHERE tracking='" + p.getTracking()         + "';";
-			stmt.executeUpdate(sql);
+            sql = "UPDATE people SET packages='" + packages + "', " +
+                    "numPackages='" + numPackages + "' " +
+                    "WHERE pid=?;";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, p.getStudent().getPid());
+
+
+
+			stmt.executeUpdate();
+			//Delete the package
+			//sql = "DELETE FROM packages WHERE tracking='" + p.getTracking() +"';";
+            sql = "DELETE FROM packages WHERE tracking=?;";
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, p.getTracking());
+
+
+			stmt.executeUpdate();
 			stmt.close();
 			conn.close();
 			return true;
@@ -310,9 +359,16 @@ public class DatabaseWrappers
 		try
 		{
 			Connection conn = SQLiteConnection.dbConnector();
-			Statement stmt = conn.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
-					"student='" + p.getPid() + "';" );
+			//Statement stmt = conn.createStatement();
+//			ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
+//					"student='" + p.getPid() + "';" );
+
+            String sql = "SELECT * FROM packages WHERE student=?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, p.getPid());
+            ResultSet result = stmt.executeQuery();
+
+
 			if (!result.next())
 			{
 				stmt.close();
