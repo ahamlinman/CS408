@@ -64,6 +64,9 @@ public class Client {
         HttpClient client = new DefaultHttpClient();
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
+
+        enableStrictMode();
+
         return client;
     }
 
