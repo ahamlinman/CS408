@@ -2,6 +2,7 @@ package cs408.packattk;
 
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -57,22 +58,37 @@ public class AdminActivity extends ActionBarActivity {
     }
 
     public void attemptScanPackage() {
-        String username = "";
-        String packageid = "";
-        String location = "";
 
         //Create a dialog for the user to enter the package information into the system
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.dialog_package_entry);
 
-        EditText usernameBox = (EditText)findViewById(R.id.user_email);
-        EditText packageIdBox = (EditText)findViewById(R.id.packageId);
-        EditText locationBox = (EditText)findViewById(R.id.location);
+        final EditText usernameBox = (EditText)findViewById(R.id.user_email);
+        final EditText packageIdBox = (EditText)findViewById(R.id.packageId);
+        final EditText locationBox = (EditText)findViewById(R.id.location);
 
-        
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            String username = "";
+            String packageid = "";
+            String location = "";
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                username = usernameBox.getText().toString();
+                packageid = packageIdBox.getText().toString();
+                location = locationBox.getText().toString();
 
-        client.addPackage(username, packageid, location);
+                client.addPackage(username, packageid, location);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
     }
 
     @Override
