@@ -51,7 +51,7 @@ public class APIServer {
             }
         }
         if (command.startsWith("ListOldPackages")) {
-            if(!(ListOldPackages(command)).equals("FAILURE")) {
+            if(!(listOldPackages(command)).equals("FAILURE")) {
                 return listAllPackages(command);
             } else {
                 return "FAILURE";
@@ -119,93 +119,92 @@ public class APIServer {
        System.out.println("Location: " + hall);
        String idnum = credentials.substring(credentials.indexOf(" ")+1);
        System.out.println("ID: " + idnum);
-       Person newuser = new Person(idnum, lastName,firstName,hall,0, isadmin);
-       try {
-           return DatabaseWrappers.addUser(newUser);
-       } catch (SQLException e) {
-           e.printStackTrace();
-           return false;
-       }
+       Person newuser = new Person(idnum, lastName, firstName, hall, 0, isadmin, username, password);
+       return DatabaseWrappers.addPerson(newuser);
    }
 
     /*GETPACKAGES pid*/
    public String getPackages( String msg ){
        if(msg.length() == 0 ){
-           return false;
+           return "NOPACKAGES";
        }
 
        String credentials = msg.substring(msg.indexOf(" ") + 1);
        String userid = msg.substring(credentials.indexOf(" ")+1);
        System.out.println("Userid: " + userid);
-       try{
-           ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
-           String packageList =null;
-           for(Package p: packages){
-               packageList = packageList+ p.getName()+"\t"+
-                       p.getTracking()+"\t"+ p.getTime()+"\t"+
-                       p.getLocation()+"\n";
-           }
-           packageList += "*"; //Indicate the end of the packages list
+       ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
+	   
+	   if(packages == null) {
+		   return "FAILURE";
+	   }
+	   
+	   String packageList =null;
+	   for(Package p: packages){
+	       packageList = packageList+ p.getName()+"\t"+
+	               p.getTracking()+"\t"+ p.getTime()+"\t"+
+	               p.getLocation()+"\n";
+	   }
+	   packageList += "*"; //Indicate the end of the packages list
 
-           return packageList;
-       } catch (SQLException e) {
-           e.printStackTrace();
-           return "FAILURE";
-       }
+	   return packageList;
    }
     /*ListAllPackages adminid*/
     public String listAllPackages( String msg ){
         if(msg.length() == 0 ){
-            return false;
+            return "NOPACKAGES";
         }
         
         String credentials = msg.substring(msg.indexOf(" ") + 1);
         String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
-        Person administrator = DatabaseWrappers.getPerson(admin);
+        Person administrator = DatabaseWrappers.getPerson(adminid);
         if(administrator== null || !administrator.getIsAdmin())
             return "FAILURE";
         String packageList =null;
-        try{
-            ArrayList<Person> people = DatabaseWrappers.getPeople();
-            for(Person user: people){
-                ArrayList<Package> packages = DatabaseWrappers.getPackages(user);
-                for(Package p: packages){
-                    packageList = packageList+ p.getName()+"\t"+
-                            p.getTracking()+"\t"+ p.getTime()+"\t"+
-                            p.getLocation()+"\n";
-                }
-                packageList += "#"; //Indicate the end of the packages list
-            }
-            packageList += "*";
-            return packageList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "FAILURE";
-        }
+        ArrayList<Person> people = DatabaseWrappers.getPeople();
+		
+		if(people == null) {
+			return "FAILURE";
+		}
+		
+		for(Person user: people){
+		    ArrayList<Package> packages = DatabaseWrappers.getPackages(user);
+		    if(packages == null) {
+		    	return "FAILURE";
+		    }
+		    
+		    for(Package p: packages){
+		        packageList = packageList+ p.getName()+"\t"+
+		                p.getTracking()+"\t"+ p.getTime()+"\t"+
+		                p.getLocation()+"\n";
+		    }
+		    packageList += "#"; //Indicate the end of the packages list
+		}
+		packageList += "*";
+		return packageList;
     }
     /*ListOldPackages time*/
     public String listOldPackages( String msg ){
         if(msg.length() == 0 ){
-            return false;
+            return "NOPACKAGES";
         }
         
         String credentials = msg.substring(msg.indexOf(" ") + 1);
         long time = Long.parseLong(msg.substring(credentials.indexOf(" ")+1));
         String packageList =null;
-        try{
-            ArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
-            for(Package p: packages){
-                packageList = packageList+ p.getName()+"\t"+
-                        p.getTracking()+"\t"+ p.getTime()+"\t"+
-                        p.getLocation()+"\n";
-            }
-            packageList += "#"; //Indicate the end of the packages list
-            return packageList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "FAILURE";
-        }
+        ArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
+		
+		if(packages == null) {
+			return "FAILURE";
+		}
+		
+		for(Package p: packages){
+		    packageList = packageList+ p.getName()+"\t"+
+		            p.getTracking()+"\t"+ p.getTime()+"\t"+
+		            p.getLocation()+"\n";
+		}
+		packageList += "#"; //Indicate the end of the packages list
+		return packageList;
     }
     /*ADDPACKAGE  packageId	packageTracking destination ID AdminID \t date \t location\n*/
     public boolean addPackages( String msg ){
