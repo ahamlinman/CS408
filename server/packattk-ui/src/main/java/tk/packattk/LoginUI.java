@@ -94,7 +94,11 @@ public class LoginUI extends UI {
 						Person currentUser = DatabaseWrappers.getPersonByUsername(username);
 						VaadinService.getCurrentRequest().getWrappedSession().invalidate();
 						VaadinService.getCurrentRequest().getWrappedSession().setAttribute("user", currentUser);
-						getUI().getPage().setLocation("/packages/view");
+						if(currentUser.getIsAdmin()) {
+							getUI().getPage().setLocation("/packages/admin");
+						} else {
+							getUI().getPage().setLocation("/packages/view");
+						}
 					} else {
 						Notification.show("Incorrect username/password. Please try again.");
 					}

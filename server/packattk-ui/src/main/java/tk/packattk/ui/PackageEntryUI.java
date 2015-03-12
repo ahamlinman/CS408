@@ -68,9 +68,24 @@ public class PackageEntryUI extends UI {
 		MenuItem mainItem = mainMenu.addItem("Packattk", null);
 		mainItem.addItem("About", null);
 
+		mainMenu.addItem("Administration", new Command() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				getPage().setLocation("/packages/admin");
+			}
+		});
+
+		mainMenu.addItem("Check Out", new Command() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				getPage().setLocation("/packages/checkout");
+			}
+		});
+
 		mainMenu.addItem("Log Out", new Command() {
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				VaadinService.getCurrentRequest().getWrappedSession().invalidate();

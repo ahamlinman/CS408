@@ -1,8 +1,8 @@
 package tk.packattk.components;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
+import tk.packattk.components.listeners.PersonSelectListener;
 import tk.packattk.utils.DatabaseWrappers;
 import tk.packattk.utils.Person;
 
@@ -13,11 +13,11 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 
 public class AdminPersonPanel extends CustomComponent {
 
@@ -34,6 +34,7 @@ public class AdminPersonPanel extends CustomComponent {
 	private TextField filter_field;
 
 	private BeanItemContainer<Person> personContainer;
+	private PersonSelectListener selectListener;
 
 	/*- VaadinEditorProperties={"grid":"RegularGrid,20","showGrid":true,"snapToGrid":true,"snapToObject":true,"movingGuides":false,"snappingDistance":10} */
 
@@ -57,6 +58,14 @@ public class AdminPersonPanel extends CustomComponent {
 		person_table.setColumnHeaders("Last Name", "First Name", "Location");
 		person_table.setSelectable(true);
 		person_table.setImmediate(true);
+		person_table.addValueChangeListener(new ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				if(selectListener != null) {
+					selectListener.personSelected((Person) person_table.getValue());
+				}
+			}
+		});
 
 		filter_field.addTextChangeListener(new TextChangeListener() {
 			@Override
@@ -71,6 +80,10 @@ public class AdminPersonPanel extends CustomComponent {
 		});
 		filter_field.setImmediate(true);
 		filter_field.setTextChangeEventMode(TextChangeEventMode.EAGER);
+	}
+	
+	public void setPersonSelectListener(PersonSelectListener listener) {
+		selectListener = listener;
 	}
 
 	public Person getPerson() {
@@ -94,15 +107,15 @@ public class AdminPersonPanel extends CustomComponent {
 		mainLayout.setImmediate(false);
 		mainLayout.setWidth("100%");
 		mainLayout.setHeight("100%");
-
+		
 		// top-level component properties
 		setWidth("100.0%");
 		setHeight("100.0%");
-
+		
 		// verticalLayout_1
 		verticalLayout_1 = buildVerticalLayout_1();
 		mainLayout.addComponent(verticalLayout_1, "top:0.0px;left:0.0px;");
-
+		
 		return mainLayout;
 	}
 
@@ -114,7 +127,7 @@ public class AdminPersonPanel extends CustomComponent {
 		verticalLayout_1.setWidth("100.0%");
 		verticalLayout_1.setHeight("-1px");
 		verticalLayout_1.setMargin(false);
-
+		
 		// filter_field
 		filter_field = new TextField();
 		filter_field.setCaption("Filter by Last Name");
@@ -123,7 +136,7 @@ public class AdminPersonPanel extends CustomComponent {
 		filter_field.setHeight("-1px");
 		verticalLayout_1.addComponent(filter_field);
 		verticalLayout_1.setExpandRatio(filter_field, 1.0f);
-
+		
 		// person_table
 		person_table = new Table();
 		person_table.setCaption("People");
@@ -132,7 +145,7 @@ public class AdminPersonPanel extends CustomComponent {
 		person_table.setHeight("-1px");
 		verticalLayout_1.addComponent(person_table);
 		verticalLayout_1.setExpandRatio(person_table, 1.0f);
-
+		
 		return verticalLayout_1;
 	}
 
