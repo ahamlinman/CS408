@@ -16,7 +16,7 @@ public class DatabaseWrappers
 //		Statement stmt = conn.createStatement();
 //		String sql = "SELECT * FROM people WHERE username='" + username +
 //				"' AND password='" + password + "';";
-        String sql = "SELECT * FROM people WHERE username=? AND password=?';";
+        String sql = "SELECT * FROM people WHERE username=? AND password=?;";
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setString(1, username);
         stmt.setString(2, password);
@@ -84,6 +84,7 @@ public class DatabaseWrappers
             ResultSet result = stmt.executeQuery();
 			if (!result.next())
 			{
+                System.out.println("Returned empty 1");
 				stmt.close();
 				conn.close();
 				return null;
@@ -123,7 +124,8 @@ public class DatabaseWrappers
 
 			if (!result.next())
 			{
-				stmt.close();
+                System.out.println("Returned empty 2");
+                stmt.close();
 				conn.close();
 				return null;
 			}
@@ -187,6 +189,7 @@ public class DatabaseWrappers
 
 			if (!result.next())
 			{
+                System.out.println("Returned empty 3");
 				stmt.close();
 				conn.close();
 				return false;
@@ -235,6 +238,7 @@ public class DatabaseWrappers
 
 			if (!result.next())
 			{
+                System.out.println("Returned empty 4");
 				stmt.close();
 				conn.close();
 				return null;
@@ -261,6 +265,7 @@ public class DatabaseWrappers
 					result2.getString("password"));
 			if (!result3.next())
 			{
+                System.out.println("Returned empty 5");
 				stmt.close();
 				conn.close();
 				return null;
@@ -312,6 +317,7 @@ public class DatabaseWrappers
 
 			if (!result.next())
 			{
+                System.out.println("Returned empty 6");
 				stmt.close();
 				conn.close();
 				return false;
@@ -371,6 +377,7 @@ public class DatabaseWrappers
 
 			if (!result.next())
 			{
+                System.out.println("Returned empty 7");
 				stmt.close();
 				conn.close();
 				return null;
