@@ -69,9 +69,6 @@ public class AdminActivity extends ActionBarActivity {
         EditText packageIdBox = (EditText)findViewById(R.id.packageId);
         EditText locationBox = (EditText)findViewById(R.id.location);
 
-        
-
-
         client.addPackage(username, packageid, location);
     }
 

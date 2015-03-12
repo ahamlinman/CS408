@@ -16,7 +16,6 @@ import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
@@ -40,6 +39,11 @@ public class LoginUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
+		Person currentUser = (Person) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("user");
+		if(currentUser != null) {
+			redirectUser(currentUser);
+		}
+		
 		setContent(buildInterface());
 	}
 
@@ -94,11 +98,7 @@ public class LoginUI extends UI {
 						Person currentUser = DatabaseWrappers.getPersonByUsername(username);
 						VaadinService.getCurrentRequest().getWrappedSession().invalidate();
 						VaadinService.getCurrentRequest().getWrappedSession().setAttribute("user", currentUser);
-						if(currentUser.getIsAdmin()) {
-							getUI().getPage().setLocation("/packages/admin");
-						} else {
-							getUI().getPage().setLocation("/packages/view");
-						}
+						redirectUser(currentUser);
 					} else {
 						Notification.show("Incorrect username/password. Please try again.");
 					}
@@ -110,6 +110,14 @@ public class LoginUI extends UI {
 		});
 
 		return layout;
+	}
+	
+	private void redirectUser(Person currentUser) {
+		if(currentUser.getIsAdmin()) {
+			getUI().getPage().setLocation("/packages/admin");
+		} else {
+			getUI().getPage().setLocation("/packages/view");
+		}
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "LoginUIServlet", asyncSupported = true)

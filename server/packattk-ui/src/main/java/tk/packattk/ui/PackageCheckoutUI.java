@@ -42,7 +42,7 @@ public class PackageCheckoutUI extends UI {
 	protected void init(VaadinRequest request) {
 		currentUser = (Person) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("user");
 
-		if(currentUser == null) {
+		if(currentUser == null || !currentUser.getIsAdmin()) {
 			getUI().getPage().setLocation("/");
 			return;
 		}
