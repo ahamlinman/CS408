@@ -13,6 +13,7 @@ import java.net.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -155,9 +156,9 @@ public class Client {
      * @param username
      * @return
      */
-    public ArrayList getPackages(String username){
+    public List getPackages(String username){
         String command = GETPACKAGES + " " + username;
-        ArrayList<String> packageList = new ArrayList<String>();
+        List<String> packageList = new ArrayList<String>();
         String response = executeServerCommand(command);
 
         Log.v(TAG,"List Response" + response);

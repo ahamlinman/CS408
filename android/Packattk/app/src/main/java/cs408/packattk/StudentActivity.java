@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import java.util.List;
 
 
 public class StudentActivity extends ActionBarActivity {
+
+    private ListView listView;
     private Client client = new Client();
 
     @Override
@@ -17,16 +22,25 @@ public class StudentActivity extends ActionBarActivity {
         setContentView(R.layout.activity_student);
 
         Button refreshButton= (Button) findViewById(R.id.refresh_button);
+        listView = (ListView)findViewById(R.id.listView);
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptRefresh();
             }
         });
+
+        //Populate the list of packages
+        List<String> packageList = client.getPackages(Data.username);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.activity_list_item,packageList);
+        listView.setAdapter(adapter);
     }
 
     public void attemptRefresh() {
-        client.getPackages("username");
+        List<String> packageList = client.getPackages(Data.username);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.activity_list_item,packageList);
+        listView.setAdapter(adapter);
     }
 
     @Override

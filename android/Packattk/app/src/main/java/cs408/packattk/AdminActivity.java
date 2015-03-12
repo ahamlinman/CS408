@@ -1,16 +1,22 @@
 package cs408.packattk;
 
-import android.content.Intent;
+
+import android.app.AlertDialog;
 import android.support.v7.app.ActionBarActivity;
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import java.util.List;
 
 
 public class AdminActivity extends ActionBarActivity {
+
+    private ListView listView;
     private Client client = new Client();
 
     @Override
@@ -23,6 +29,8 @@ public class AdminActivity extends ActionBarActivity {
 
         Button refreshButton= (Button) findViewById(R.id.refresh_button);
         Button scanButton = (Button) findViewById(R.id.scan_button);
+        listView = (ListView) findViewById(R.id.listView2);
+
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,14 +43,29 @@ public class AdminActivity extends ActionBarActivity {
                 attemptScanPackage();
             }
         });
+        List<String> packageList = client.getPackages(Data.username);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.activity_list_item,packageList);
+        listView.setAdapter(adapter);
+
     }
 
     public void attemptRefresh() {
-        client.getPackages("username");
+        List<String> packageList = client.getPackages(Data.username);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.activity_list_item,packageList);
+        listView.setAdapter(adapter);
     }
 
     public void attemptScanPackage() {
-        client.addPackage("username", "packageid", "location");
+        String username = "";
+        String packageid = "";
+        String location = "";
+
+        //Create a dialog for the user to enter the package information into the system
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(R.layout.dialog_package_entry);
+
+
+        client.addPackage(username, packageid, location);
     }
 
     @Override

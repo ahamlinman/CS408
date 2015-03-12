@@ -84,7 +84,7 @@ public class LoginActivity extends Activity {
         if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             int newUserValid=1;
             Client client = new Client();
-            newUserValid= client.addUser(email,password);
+            //newUserValid= client.addUser(email,password);
             //newUserValid = Client.addUser(email,password);
 
             if(newUserValid==1)
@@ -179,11 +179,13 @@ public class LoginActivity extends Activity {
                     if(check==1){
                         Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
                         intent.putExtra("user",email);
+                        Data.username=email;
                         startActivity(intent);
                     }
                     else if(check==2){
                         Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
                         intent.putExtra("user",email);
+                        Data.username=email;
                         startActivity(intent);
                     }
                     else{
