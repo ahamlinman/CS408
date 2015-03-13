@@ -66,6 +66,7 @@ public class DatabaseWrappers
 		} catch (Exception e)
 		{
 			//Print error somewhere?
+
 		}
 		return false;
 	}
@@ -183,6 +184,7 @@ public class DatabaseWrappers
 //			ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
 //					"pid='" + p.getStudent().getPid() + "';" );
             sql = "SELECT * FROM people WHERE pid=?;";
+            conn.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1,p.getStudent().getPid());
             ResultSet result = stmt.executeQuery();
@@ -206,6 +208,7 @@ public class DatabaseWrappers
 					"packages=?', " +
 					"numPackages=? " +
 					"WHERE pid=?;";
+            conn.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, packages);
             stmt.setInt(2, numPackages);
@@ -250,7 +253,8 @@ public class DatabaseWrappers
 			ResultSet result3 = stmt.executeQuery("SELECT * FROM people WHERE " +
 					"pid='" + adminId + "';" );
 			if (!result2.next()){
-				stmt.close();
+                System.out.println("Returned empty 4.5");
+                stmt.close();
 				conn.close();
 				return null;
 			}
@@ -334,6 +338,7 @@ public class DatabaseWrappers
             sql = "UPDATE people SET packages='" + packages + "', " +
                     "numPackages='" + numPackages + "' " +
                     "WHERE pid=?;";
+            conn.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, p.getStudent().getPid());
 
@@ -344,6 +349,7 @@ public class DatabaseWrappers
 			//sql = "DELETE FROM packages WHERE tracking='" + p.getTracking() +"';";
             sql = "DELETE FROM packages WHERE tracking=?;";
 
+            conn.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, p.getTracking());
 
