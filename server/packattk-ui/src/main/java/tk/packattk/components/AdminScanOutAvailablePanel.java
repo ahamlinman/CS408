@@ -53,8 +53,10 @@ public class AdminScanOutAvailablePanel extends CustomComponent {
 				if(p != null) {
 					Collection<Package> packages = DatabaseWrappers.getPackages(p);
 					packageContainer.removeAllItems();
-					packageContainer.addAll(packages);
-					pid_field.setEnabled(false);
+					if(packages != null) {
+						packageContainer.addAll(packages);
+						pid_field.setEnabled(false);
+					}
 				} else {
 					packageContainer.removeAllItems();
 				}

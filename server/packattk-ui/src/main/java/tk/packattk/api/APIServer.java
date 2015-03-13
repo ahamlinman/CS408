@@ -240,7 +240,7 @@ public class APIServer {
         /*Package(String name, String tracking, String location, String destination, Person student,
          Person admin, long date) */
         Person user = DatabaseWrappers.getPersonByName(firstName, lastName);
-        Person admin = DatabaseWrappers.getPersonByUsername(adminID)
+        Person admin = DatabaseWrappers.getPersonByUsername(adminID);
         if(user!= null && admin != null && admin.getIsAdmin()){
             Package p = new Package(packageId, trackingNumber,admin.getLocation(),destination,user,admin,date);
             return DatabaseWrappers.addPackage(p);
