@@ -1,5 +1,6 @@
 package cs408.packattk;
 
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +30,19 @@ public class Client {
     private final static String GETPACKAGES = "GETPACKAGES";
     private final static String ADDPACKAGE = "ADDPACKAGE";
 
+    Thread clientThread = null;
+
+    public void run() {
+
+    }
+
+    public void enableStrictMode()
+    {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+    }
+
     public Client() {
     }
 
@@ -50,6 +64,9 @@ public class Client {
         HttpClient client = new DefaultHttpClient();
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
         HttpConnectionParams.setConnectionTimeout(client.getParams(), CONNECTION_TIMEOUT);
+
+        enableStrictMode();
+
         return client;
     }
 
