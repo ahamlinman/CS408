@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import tk.packattk.utils.DatabaseWrappers;
+
 import tk.packattk.utils.Package;
 import tk.packattk.utils.Person;
 
@@ -123,7 +124,9 @@ public class APIServer {
        return DatabaseWrappers.addPerson(newuser);
    }
 
-    /*GETPACKAGES pid*/
+    /*GETPACKAGES pid
+    * PackageName\t trackingNumber \t location \n
+*/
    public String getPackages( String msg ){
        if(msg.length() == 0 ){
            return "NOPACKAGES";
@@ -131,17 +134,13 @@ public class APIServer {
 
        String credentials = msg.substring(msg.indexOf(" ") + 1);
        String userid = msg.substring(credentials.indexOf(" ")+1);
+       if()
        System.out.println("Userid: " + userid);
        ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
-	   
-	   if(packages == null) {
-		   return "FAILURE";
-	   }
-	   
-	   String packageList =null;
+	   String packageList ="";
 	   for(Package p: packages){
 	       packageList = packageList+ p.getName()+"\t"+
-	               p.getTracking()+"\t"+ p.getTime()+"\t"+
+	               p.getTracking()+"\t"+
 	               p.getLocation()+"\n";
 	   }
 	   packageList += "*"; //Indicate the end of the packages list
