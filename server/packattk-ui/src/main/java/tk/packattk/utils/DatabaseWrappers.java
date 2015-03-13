@@ -120,6 +120,38 @@ public class DatabaseWrappers
 		return null;
 	}
 
+    public static Person getPersonByName(String firstName, String lastName)
+    {   //Gets the information for the person with the id pid, given.
+        try
+        {
+            Connection conn = SQLiteConnection.dbConnector();
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
+                    "firstName='" + firstName + "' AND lastName='" + lastName + "';" );
+            if (!result.next())
+            {
+                stmt.close();
+                conn.close();
+                return null;
+            }
+            Person p = new Person(
+                    result.getString("pid"),
+                    result.getString("lastName"),
+                    result.getString("firstName"),
+                    result.getString("location"),
+                    result.getInt("numPackages"),
+                    result.getInt("isAdmin") == 1,  //isAdmin is stored as an int in the database. So it must be converted to boolean
+                    result.getString("username"),
+                    result.getString("password"));
+            stmt.close();
+            conn.close();
+            return p;
+        } catch (Exception e)
+        {
+            //Print error somewhere?
+        }
+        return null;
+    }
 	public static boolean addPackage(Package p)
 	{   //Adds a new package to the database when scanned in.
 		try
