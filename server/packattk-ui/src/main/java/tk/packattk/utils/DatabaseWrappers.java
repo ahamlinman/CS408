@@ -184,7 +184,7 @@ public class DatabaseWrappers
 //			ResultSet result = stmt.executeQuery( "SELECT * FROM people WHERE " +
 //					"pid='" + p.getStudent().getPid() + "';" );
             sql = "SELECT * FROM people WHERE pid=?;";
-            conn.close();
+            stmt.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1,p.getStudent().getPid());
             ResultSet result = stmt.executeQuery();
@@ -208,7 +208,7 @@ public class DatabaseWrappers
 					"packages=?', " +
 					"numPackages=? " +
 					"WHERE pid=?;";
-            conn.close();
+            stmt.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, packages);
             stmt.setInt(2, numPackages);
@@ -338,7 +338,7 @@ public class DatabaseWrappers
             sql = "UPDATE people SET packages='" + packages + "', " +
                     "numPackages='" + numPackages + "' " +
                     "WHERE pid=?;";
-            conn.close();
+            stmt.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, p.getStudent().getPid());
 
@@ -349,7 +349,7 @@ public class DatabaseWrappers
 			//sql = "DELETE FROM packages WHERE tracking='" + p.getTracking() +"';";
             sql = "DELETE FROM packages WHERE tracking=?;";
 
-            conn.close();
+            stmt.close();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, p.getTracking());
 
