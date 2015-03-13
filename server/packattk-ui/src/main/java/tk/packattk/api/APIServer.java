@@ -136,9 +136,9 @@ public class APIServer {
        String userid = msg.substring(credentials.indexOf(" ")+1);
        System.out.println("Userid: " + userid);
        ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
-	   String packageList ="EMPTY";
+	   String packageList ="";
        //Person p1 =
-       if(packages == null) return packageList;
+       if(packages == null) return "EMPTY";
 	   for(Package p: packages){
 	       packageList = packageList+ p.getName()+"\t"+
 	               p.getTracking()+"\t"+
