@@ -134,10 +134,10 @@ public class APIServer {
 
        String credentials = msg.substring(msg.indexOf(" ") + 1);
        String userid = msg.substring(credentials.indexOf(" ")+1);
-       if()
        System.out.println("Userid: " + userid);
        ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
 	   String packageList ="";
+       if(packages == null) return packageList;
 	   for(Package p: packages){
 	       packageList = packageList+ p.getName()+"\t"+
 	               p.getTracking()+"\t"+
