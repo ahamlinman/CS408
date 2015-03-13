@@ -104,7 +104,7 @@ public class APIServer {
        String username = credentials.substring(0, credentials.indexOf(" "));
        System.out.println("Username: " + username);
        credentials = credentials.substring(credentials.indexOf(" ")+1);
-       String password = credentials.substring(0,credentials.indexOf(" ") + 1);
+       String password = credentials.substring(0,credentials.indexOf(" "));
        System.out.println("Password: " + password);
        credentials = credentials.substring(credentials.indexOf(" ")+1);
        String firstName = credentials.substring(0, credentials.indexOf(" "));
@@ -137,6 +137,7 @@ public class APIServer {
        System.out.println("Userid: " + userid);
        ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
 	   String packageList ="";
+       //Person p1 =
        if(packages == null) return packageList;
 	   for(Package p: packages){
 	       packageList = packageList+ p.getName()+"\t"+
