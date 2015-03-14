@@ -208,8 +208,8 @@ public class Client {
      public int addPackage(String username, String packageId, String location){
         String command = ADDPACKAGE + " " + username + " " + packageId + " " + location;
         String response=executeServerCommand(command);
-        Toast toast = Toast.makeText(getApplicationContext(),"un: " + username + " pid: " + packageId + " location: " + location,Toast.LENGTH_SHORT);
-        toast.show();
+        //Toast toast = Toast.makeText(getApplicationContext(),"un: " + username + " pid: " + packageId + " location: " + location,Toast.LENGTH_SHORT);
+        //toast.show();
         if(response.trim()=="SUCCESS")
             return 1;
         return 0;

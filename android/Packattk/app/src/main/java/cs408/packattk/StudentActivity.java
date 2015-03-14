@@ -32,14 +32,14 @@ public class StudentActivity extends ActionBarActivity {
 
         //Populate the list of packages
         List<String> packageList = client.getPackages(Data.username);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.activity_list_item,packageList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,packageList);
         listView.setAdapter(adapter);
     }
 
     public void attemptRefresh() {
         List<String> packageList = client.getPackages(Data.username);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.activity_list_item,packageList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,packageList);
         listView.setAdapter(adapter);
     }
 
