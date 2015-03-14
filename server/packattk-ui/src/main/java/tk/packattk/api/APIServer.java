@@ -24,11 +24,7 @@ public class APIServer {
 		System.out.println("Received command: " + command);
 
 		if (command.startsWith("LOGIN")) {
-			if(checkLoginMessage(command)) {
-				return "SUCCESSUSER";
-			} else {
-				return "FAILURE";
-			}
+			return checkLoginMessage(command);
 		}
         if(command.startsWith("ADDUSER")) {
             if(addNewUser(command)) {
@@ -73,12 +69,12 @@ public class APIServer {
 	/**
 	 * Check a LOGIN message and verify the username/password
 	 * @param msg The LOGIN message to check
-	 * @return Whether the login was correct (true) or not (false)
+	 * @return The status of the login (failed or success, and whether user is admin)
 	 * @author Cris, Alex
 	 */
-	public boolean checkLoginMessage(String msg) {
+	public String checkLoginMessage(String msg) {
 		if (msg.length() == 0)
-			return false;
+			return "FAILURE";
 
 		String credentials = msg.substring(msg.indexOf(" ") + 1);
 		System.out.println("Credentials: " + credentials);
@@ -87,12 +83,18 @@ public class APIServer {
 		String password = credentials.substring(credentials.indexOf(" ") + 1);
 		System.out.println("Password: " + password);
 
+		boolean result;
 		try {
-			return DatabaseWrappers.checkLogin(username, password);
+			result = DatabaseWrappers.checkLogin(username, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return "FAILURE";
 		}
+
+		if(!result) return "FAILURE";
+
+		Person p = DatabaseWrappers.getPersonByUsername(username);
+		return p.getIsAdmin() ? "SUCCESSADMIN" : "SUCCESSUSER";
 	}
 
     /*ADDUSER username password firstname lastname isAdmin pid hall */
