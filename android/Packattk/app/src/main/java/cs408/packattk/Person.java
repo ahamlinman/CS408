@@ -31,8 +31,10 @@ public class Person {
      */
     public Package getPackage(String tracking) {
         for (Package p : packages) {
-            if (p.getTracking().equals(tracking))
+            if (p.getTracking().equals(tracking)) {
+                //numPackages--;
                 return p;
+            }
         }
 
         return null;

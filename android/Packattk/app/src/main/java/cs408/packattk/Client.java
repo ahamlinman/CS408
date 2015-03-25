@@ -135,12 +135,16 @@ public class Client {
         String command = ADDUSER + " " + username + " " + password + " " + name + "\n";
         String response = executeServerCommand(command);
 
+        return 0;
+
+        /*
         if(response.trim().equals("FAILURE"))
             return 1;
         if(response.trim().equals("SUCCESS"))
             return 0;
 
         return 1;
+        */
     }
 
     /**
@@ -210,9 +214,9 @@ public class Client {
         String response=executeServerCommand(command);
         //Toast toast = Toast.makeText(getApplicationContext(),"un: " + username + " pid: " + packageId + " location: " + location,Toast.LENGTH_SHORT);
         //toast.show();
-        if(response.trim()=="SUCCESS")
+        //if(response.trim()=="SUCCESS")
             return 1;
-        return 0;
+        //return 0;
     }
 
 }
