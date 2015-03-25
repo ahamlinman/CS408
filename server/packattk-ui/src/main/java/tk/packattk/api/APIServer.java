@@ -120,7 +120,9 @@ public class APIServer {
        System.out.println("Location: " + hall);
        String idnum = credentials.substring(credentials.indexOf(" ")+1);
        System.out.println("ID: " + idnum);
-       Person newuser = new Person(idnum, lastName, firstName, hall, 0, isadmin, username, password);
+       //Person newuser = new Person(idnum, lastName, firstName, hall, 0, isadmin, username, password);
+       /*Bugging code */
+       Person newuser = new Person(idnum, lastName, firstName, hall, 0, isadmin,  password,username);
        return DatabaseWrappers.addPerson(newuser);
    }
 
@@ -137,8 +139,8 @@ public class APIServer {
        System.out.println("Userid: " + userid);
        ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
 	   String packageList ="";
-       //Person p1 =
-       if(packages == null) return "EMPTY";
+       /*Bugging code*/
+      // if(packages == null) return "EMPTY";
 	   for(Package p: packages){
 	       packageList = packageList+ p.getName()+"\t"+
 	               p.getTracking()+"\t"+
@@ -158,7 +160,8 @@ public class APIServer {
         String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
         Person administrator = DatabaseWrappers.getPerson(adminid);
-        if(administrator== null || !administrator.getIsAdmin())
+       // if(administrator== null || !administrator.getIsAdmin())
+        if(administrator== null) // Bugging code
             return "FAILURE";
         String packageList =null;
         ArrayList<Person> people = DatabaseWrappers.getPeople();
@@ -198,10 +201,13 @@ public class APIServer {
 			return "FAILURE";
 		}
 		
-		for(Package p: packages){
-		    packageList = packageList+ p.getName()+"\t"+
+		for(Package p: packages){  /*Bugging code*/
+		   /* packageList = packageList+ p.getName()+"\t"+
 		            p.getTracking()+"\t"+ p.getTime()+"\t"+
-		            p.getLocation()+"\n";
+		            p.getLocation()+"\n";*/
+            packageList = packageList+ p.getName()+
+                    p.getTracking()+"\t"+ p.getTime()+"\t"+"\t"+
+                    p.getLocation()+"\n";
 		}
 		packageList += "#"; //Indicate the end of the packages list
 		return packageList;
@@ -242,6 +248,7 @@ public class APIServer {
 
         Person user = DatabaseWrappers.getPerson(ID);
         Person admin = DatabaseWrappers.getPerson(AdminID);
+        //if(admin == null ||!admin.getIsAdmin() ) return "FAILURE";
         Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
 
         return DatabaseWrappers.addPackage(p);
