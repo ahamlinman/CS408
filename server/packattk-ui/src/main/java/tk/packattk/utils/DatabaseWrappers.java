@@ -17,6 +17,7 @@ public class DatabaseWrappers
 		String sql = "SELECT * FROM people WHERE username='" + username +
 				"' AND password='" + password + "';";
 		ResultSet result = stmt.executeQuery(sql);
+        result.next();
 		boolean exists = result.next(); //True if the result has a match, false if no match found
 		stmt.close();
 		conn.close();
@@ -39,8 +40,7 @@ public class DatabaseWrappers
 					p.getLastName()     + "', '" +
 					p.getFirstName()    + "', '" +
 					p.getLocation()     + "', " +
-					"',' , 0, " +      // Insert the string ',' as the packages and 0 for numPackages
-					isAdmin             + ", '" +
+					"',' , 0, 0, '" +
 					p.getUsername()     + "', '" +
 					p.getPassword()     + "');";
 			stmt.executeUpdate(sql);
@@ -61,7 +61,7 @@ public class DatabaseWrappers
 			Connection conn = SQLiteConnection.dbConnector();
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-					"pid='" + pid + "';" );
+					"firstName='" + pid + "';" );
 			if (!result.next())
 			{
 				stmt.close();
@@ -94,7 +94,7 @@ public class DatabaseWrappers
 			Connection conn = SQLiteConnection.dbConnector();
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM people WHERE " +
-					"username='" + username + "';" );
+					"firstName='" + username + "';" );
 			if (!result.next())
 			{
 				stmt.close();
@@ -163,8 +163,8 @@ public class DatabaseWrappers
 					"name, tracking, location," +
 					"destination, student, admin, time)" +
 					"VALUES ('" +
-					p.getName()             + "', '" +
-					p.getTracking()         + "', '" +
+					p.getName()             + "" +
+					p.getTracking()         + "',, '" +
 					p.getLocation()         + "', '" +
 					p.getDestination()      + "', '" +
 					p.getStudent().getPid() + "', '" +
@@ -413,7 +413,7 @@ public class DatabaseWrappers
 			Connection conn = SQLiteConnection.dbConnector();
 			Statement stmt = conn.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM packages WHERE " +
-					"time >=" + time + " ORDER BY time;" );
+					"time <=" + time + " ORDER BY time;" );
 			while(result.next())
 				packageList.add(result.getString("tracking"));
 			stmt.close();
