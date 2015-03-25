@@ -41,13 +41,12 @@ public class PackageAdminUI extends UI {
 	protected void init(VaadinRequest request) {
 		currentUser = (Person) VaadinService.getCurrentRequest().getWrappedSession().getAttribute("user");
 
-		if(currentUser == null || !currentUser.getIsAdmin()) {
+		if(currentUser == null) {
 			getUI().getPage().setLocation("/");
 			return;
 		}
 
 		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DAY_OF_MONTH, -7);
 		oldPackageContainer = new BeanItemContainer<Package>(Package.class);
 		oldPackageContainer.addAll(DatabaseWrappers.getOldPackages(c.getTimeInMillis()));
 

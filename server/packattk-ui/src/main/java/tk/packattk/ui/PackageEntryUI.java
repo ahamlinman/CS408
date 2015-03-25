@@ -182,11 +182,6 @@ public class PackageEntryUI extends UI {
 					return;
 				}
 
-				if(owner == null) {
-					Notification.show("Please select an owner first");
-					return;
-				}
-
 				for(Package p : packages) {
 					p.setStudent(owner);
 					p.setDestination(owner.getLocation());
