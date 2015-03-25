@@ -24,7 +24,11 @@ public class APIServer {
 		System.out.println("Received command: " + command);
 
 		if (command.startsWith("LOGIN")) {
-			return checkLoginMessage(command);
+			if(checkLoginMessage(command)) {
+				return "SUCCESSUSER";
+			} else {
+				return "FAILURE";
+			}
 		}
         if(command.startsWith("ADDUSER")) {
             if(addNewUser(command)) {
@@ -69,12 +73,12 @@ public class APIServer {
 	/**
 	 * Check a LOGIN message and verify the username/password
 	 * @param msg The LOGIN message to check
-	 * @return The status of the login (failed or success, and whether user is admin)
+	 * @return Whether the login was correct (true) or not (false)
 	 * @author Cris, Alex
 	 */
-	public String checkLoginMessage(String msg) {
+	public boolean checkLoginMessage(String msg) {
 		if (msg.length() == 0)
-			return "FAILURE";
+			return false;
 
 		String credentials = msg.substring(msg.indexOf(" ") + 1);
 		System.out.println("Credentials: " + credentials);
@@ -83,18 +87,12 @@ public class APIServer {
 		String password = credentials.substring(credentials.indexOf(" ") + 1);
 		System.out.println("Password: " + password);
 
-		boolean result;
 		try {
-			result = DatabaseWrappers.checkLogin(username, password);
+			return DatabaseWrappers.checkLogin(username, password);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return "FAILURE";
+			return false;
 		}
-
-		if(!result) return "FAILURE";
-
-		Person p = DatabaseWrappers.getPersonByUsername(username);
-		return p.getIsAdmin() ? "SUCCESSADMIN" : "SUCCESSUSER";
 	}
 
     /*ADDUSER username password firstname lastname isAdmin pid hall */
@@ -114,16 +112,15 @@ public class APIServer {
        credentials = credentials.substring(credentials.indexOf(" ")+1);
        String lastName = credentials.substring(0, credentials.indexOf(" "));
        System.out.println("Lastname: " + lastName);
-       credentials = credentials.substring(credentials.indexOf(" ")+1);
+       credentials = credentials.substring(0,credentials.indexOf(" ")+1);
        boolean isadmin = Boolean.parseBoolean(credentials.substring(0, credentials.indexOf(" ")));
        System.out.println("isAdmin: " + isadmin);
-       credentials = credentials.substring(credentials.indexOf(" ")+1);
-       String pid = credentials.substring(0,credentials.indexOf(" "));
-       System.out.println("PID: " + pid);
-       String hall= credentials.substring(credentials.indexOf(" ")+1);
+       credentials = credentials.substring(0,credentials.indexOf(" ")+1);
+       String hall = credentials.substring(0,credentials.indexOf(" "));
        System.out.println("Location: " + hall);
-       /*Person(String pid, String lastName, String firstName, String location, int numPackages, boolean isAdmin, String username, String password)*/
-       Person newuser = new Person(pid, lastName, firstName, hall, 0, isadmin, username, password);
+       String idnum = credentials.substring(credentials.indexOf(" ")+1);
+       System.out.println("ID: " + idnum);
+       Person newuser = new Person(idnum, lastName, firstName, hall, 0, isadmin, username, password);
        return DatabaseWrappers.addPerson(newuser);
    }
 
@@ -135,9 +132,10 @@ public class APIServer {
            return "NOPACKAGES";
        }
 
-       String userid = msg.substring(msg.indexOf(" ")+1);
+       String credentials = msg.substring(msg.indexOf(" ") + 1);
+       String userid = msg.substring(credentials.indexOf(" ")+1);
        System.out.println("Userid: " + userid);
-       ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPersonByUsername(userid));
+       ArrayList<Package> packages = DatabaseWrappers.getPackages(DatabaseWrappers.getPerson(userid));
 	   String packageList ="";
        //Person p1 =
        if(packages == null) return "EMPTY";
@@ -155,8 +153,9 @@ public class APIServer {
         if(msg.length() == 0 ){
             return "NOPACKAGES";
         }
-
-        String adminid = msg.substring(msg.indexOf(" ")+1);
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
+        String adminid = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("Adminid: " + adminid);
         Person administrator = DatabaseWrappers.getPerson(adminid);
         if(administrator== null || !administrator.getIsAdmin())
@@ -189,13 +188,14 @@ public class APIServer {
         if(msg.length() == 0 ){
             return "NOPACKAGES";
         }
-
-        long time = Long.parseLong(msg.substring(msg.indexOf(" ")+1));
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
+        long time = Long.parseLong(msg.substring(credentials.indexOf(" ")+1));
         String packageList =null;
         ArrayList<Package> packages = DatabaseWrappers.getOldPackages(time);
 		
 		if(packages == null) {
-			return "EMPTY";
+			return "FAILURE";
 		}
 		
 		for(Package p: packages){
@@ -206,7 +206,7 @@ public class APIServer {
 		packageList += "#"; //Indicate the end of the packages list
 		return packageList;
     }
-    /*ADDPACKAGE  packageId	trackingNumber adminid firstname lastname date location\n*/
+    /*ADDPACKAGE  packageId	packageTracking destination ID AdminID \t date \t location\n*/
     public boolean addPackages( String msg ){
         if(msg.length() == 0 ){
             return false;
@@ -221,33 +221,30 @@ public class APIServer {
         System.out.println("TrackingNumber: " + trackingNumber);
 
         credentials = credentials.substring(credentials.indexOf(" ")+1);
-        String adminID = credentials.substring(0,credentials.indexOf(" "));
-        System.out.println("AdminID: " + adminID);
+        String destination = credentials.substring(0,credentials.indexOf(" "));
+        System.out.println("Destination: " + destination);
 
         credentials = credentials.substring(credentials.indexOf(" ")+1);
-        String firstName = credentials.substring(0,credentials.indexOf(" "));
-        System.out.println("firstName: " + firstName);
+        String ID = credentials.substring(0, credentials.indexOf(" "));
+        System.out.println("ID: " + ID);
 
         credentials = credentials.substring(credentials.indexOf(" ")+1);
-        String lastName = credentials.substring(0,credentials.indexOf(" "));
-        System.out.println("lastName: " + lastName);
+        String AdminID = credentials.substring(0,credentials.indexOf(" "));
+        System.out.println("AdminID: " + AdminID);
 
-        credentials = credentials.substring(credentials.indexOf(" ")+1);
-        String sdate = credentials.substring(0,credentials.indexOf(" "));
+        credentials = credentials.substring(credentials.indexOf("\t")+1);
+        String sdate = credentials.substring(0,credentials.indexOf("\t"));
         long date = Long.parseLong(sdate);
         System.out.println("Date: " + date);
 
-        String destination = credentials.substring(credentials.indexOf(" ")+1,credentials.indexOf("\n"));
-        System.out.println("Destination: " + destination);
-        /*Package(String name, String tracking, String location, String destination, Person student,
-         Person admin, long date) */
-        Person user = DatabaseWrappers.getPersonByName(firstName, lastName);
-        Person admin = DatabaseWrappers.getPersonByUsername(adminID);
-        if(user!= null && admin != null && admin.getIsAdmin()){
-            Package p = new Package(packageId, trackingNumber,admin.getLocation(),destination,user,admin,date);
-            return DatabaseWrappers.addPackage(p);
-        }
-        else return false;
+        String location = credentials.substring(credentials.indexOf("\t")+1,credentials.indexOf("\n"));
+        System.out.println("Location: " + location);
+
+        Person user = DatabaseWrappers.getPerson(ID);
+        Person admin = DatabaseWrappers.getPerson(AdminID);
+        Package p = new Package(packageId, trackingNumber,location, destination,user,admin,date);
+
+        return DatabaseWrappers.addPackage(p);
     }
 
     /*REMOVEPACKAGE trackingNum*/
@@ -255,8 +252,9 @@ public class APIServer {
         if(msg.length() == 0 ){
             return false;
         }
-
-        String trackingNumber = msg.substring(msg.indexOf(" ")+1);
+        
+        String credentials = msg.substring(msg.indexOf(" ") + 1);
+        String trackingNumber = msg.substring(credentials.indexOf(" ")+1);
         System.out.println("TrackingNumber: " + trackingNumber);
         Package p = DatabaseWrappers.getPackageInfo(trackingNumber);
 		if(p!= null)

@@ -19,7 +19,8 @@ public class Package {
     public Package(String name, String tracking, String location, String destination, Person student, Person admin, long date) {
         this.name = name;
         this.tracking = tracking;
-        this.location = location;
+    //    this.location = location;
+        this.location = null;
         this.destination = destination;
         this.student = student;
         this.admin = admin;
