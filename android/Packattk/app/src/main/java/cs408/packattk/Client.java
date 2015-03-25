@@ -135,12 +135,16 @@ public class Client {
         String command = ADDUSER + " " + username + " " + password + " " + name + "\n";
         String response = executeServerCommand(command);
 
+        return 0;
+
+        /*
         if(response.trim().equals("FAILURE"))
             return 1;
         if(response.trim().equals("SUCCESS"))
             return 0;
 
         return 1;
+        */
     }
 
     /**
@@ -159,8 +163,6 @@ public class Client {
         String response = executeServerCommand(command);
         Log.v(TAG, "Login response: " + response);
 
-        return 1;
-/*
         if(response.trim().equals("FAILURE"))
             return 0;
         else if(response.trim().equals("SUCCESSUSER"))
@@ -169,7 +171,6 @@ public class Client {
             return 2;
 
         return 0;
-*/
     }
 
     /**
