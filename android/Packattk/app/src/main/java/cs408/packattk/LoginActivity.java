@@ -36,6 +36,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login2);
 
         // Set up the login form.
+
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -89,7 +90,6 @@ public class LoginActivity extends Activity {
 
             if(newUserValid==1)
             {
-                mEmailView.setError("Invalid Username or Password");
                 focusView=mEmailView;
                 cancel=true;
                 return;
@@ -101,8 +101,6 @@ public class LoginActivity extends Activity {
 
         }
         else {
-            //display error message
-            mEmailView.setError("Empty Username or Password for Registration");
             focusView = mPasswordView;
             cancel = true;
             focusView.requestFocus();
@@ -117,9 +115,6 @@ public class LoginActivity extends Activity {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-        /*if (mAuthTask != null) {
-            return;
-        }*/
 
         // Reset errors.
         mEmailView.setError(null);
@@ -133,24 +128,6 @@ public class LoginActivity extends Activity {
         View focusView = null;
 
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -158,12 +135,6 @@ public class LoginActivity extends Activity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            //showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
-            CharSequence two = "Attempting Login";
-            Toast toast = Toast.makeText(context, two, Toast.LENGTH_SHORT);
-            toast.show();
 
 
             //Attempt Login
@@ -177,7 +148,7 @@ public class LoginActivity extends Activity {
                 @Override
                 protected void onPostExecute(Integer check) {
                     if(check==1){
-                        Intent intent = new Intent(LoginActivity.this,StudentActivity.class);
+                        Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
                         intent.putExtra("user",email);
                         Data.username=email;
                         startActivity(intent);
@@ -189,7 +160,6 @@ public class LoginActivity extends Activity {
                         startActivity(intent);
                     }
                     else{
-                        mEmailView.setError("Invalid username or password");
                         mEmailView.requestFocus();
                     }
                 }
@@ -199,48 +169,6 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private boolean isEmailValid(String email) {
-
-        //Check for valid length
-        if(email.length() < 8)
-            return false;
-
-        //Check if email has proper suffix
-        if(!(email.endsWith(".edu") || email.endsWith(".com") || email.endsWith(".org") || email.endsWith(".net")))
-            return false;
-
-        //check if email has @ and does not start with @
-        if(!(email.contains("@")) || email.charAt(0)=='@')
-            return false;
-
-        //check if @ is last character
-        if(email.indexOf("@") == email.length()-1)
-            return false;
-
-        //get characters before and after ampersand
-        char beforeAt=email.charAt(email.indexOf("@")-1);
-        char afterAt=email.charAt(email.indexOf("@")+1);
-
-        //check for valid character before and after @
-        if(!(character.isAlphaNumeric(beforeAt) && character.isAlphaNumeric(afterAt)))
-            return false;
-
-        return true;
-    }
-
-    private boolean isPasswordValid(String password) {
-
-        //Check for valid length
-        if(password.length() < 5 || password.length() > 20)
-            return false;
-
-        //check for spaces in password
-        for(int i=0;i<password.length();i++){
-            if(character.isSpace(password.charAt(i)))
-                return false;
-        }
-        return true;
-    }
 }
 
 
