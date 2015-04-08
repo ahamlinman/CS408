@@ -92,19 +92,12 @@ public class AccountCreateWindow extends CustomComponent {
 			email.validate();
 			password.validate();
 			passwordConfirm.validate();
-			validatePasswordsEqual();
 			firstname.validate();
 			lastname.validate();
 			puid.validate();
 			location.validate();
 		} catch (InvalidValueException e) {
 			throw e;
-		}
-	}
-
-	private void validatePasswordsEqual() {
-		if(!password.getValue().equals(passwordConfirm.getValue())) {
-			throw new InvalidValueException("The passwords do not match");
 		}
 	}
 

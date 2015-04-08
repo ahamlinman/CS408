@@ -96,7 +96,9 @@ public class PackageListUI extends UI {
 
 		packageTable.setContainerDataSource(packageContainer);
 		packageTable.setVisibleColumns("tracking", "location", "name");
-		packageTable.setColumnHeaders("Tracking #", "Location", "Name");
+		
+		// TODO: Double-check ordering...
+		packageTable.setColumnHeaders("Location", "Name", "Tracking #");
 
 		packageTable.setSizeFull();
 		packageTable.setSelectable(true);
